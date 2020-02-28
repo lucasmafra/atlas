@@ -16,4 +16,6 @@
                                       [org.clojure/tools.namespace "0.2.11"]
                                       [com.stuartsierra/component.repl "0.2.0"]]
                        :source-paths ["dev"]
-                       :aliases {"lint-fix" ["do" "nsorg" "--replace," "kibit" "--replace"]}}})
+                       :aliases {"lint-fix" ["do" "nsorg" "--replace," "kibit" "--replace"]}
+                       :plugins [[jonase/eastwood "0.3.8"]]
+                       :eastwood {:exclude-linters [:suspicious-test]}}})

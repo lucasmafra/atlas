@@ -1,7 +1,7 @@
 (ns user
   (:require
+   [clojure.tools.namespace.repl]
    [com.stuartsierra.component.user-helpers :refer [dev go reset]]
-   [midje.repl]
    [java-time :refer [local-date local-date-time local-time instant]]))
 
 ;; Configure the printer
