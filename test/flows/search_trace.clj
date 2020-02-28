@@ -71,7 +71,7 @@
                                         
                             {"trace_id"    "trace-2"
                              "total_spans" 2
-                             "duration_ms" 2005
+                             "duration_ms" 2006
                              "start_time"  1500000000000
                              "services"    [{"name"            "feed"
                                              "number_of_spans" 1}
