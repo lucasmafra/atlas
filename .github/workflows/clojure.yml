@@ -13,9 +13,3 @@ jobs:
       run: lein deps
     - name: Run tests
       run: lein test
-
-    - uses: actions/checkout@v1
-    - uses: DeLaGuardo/clojure-lint-action@v1
-      with:
-        clj-kondo-args: --lint .
-        github_token: ${{ secrets.GITHUB_TOKEN }}
