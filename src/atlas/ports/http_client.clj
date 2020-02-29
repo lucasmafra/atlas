@@ -25,8 +25,6 @@
 
 
 ;; --- CLIENT OVERRIDES ---
-
-
 (def client-overrides
   {:extend-deserialization
    {"traceID"   :trace-id
