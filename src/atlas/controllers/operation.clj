@@ -7,5 +7,4 @@
 
     (:data (:body
 
-
             (hc-pro/request http-client :jaeger/get-operations path-params)))))
