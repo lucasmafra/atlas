@@ -23,10 +23,7 @@
     :query-params-schema s-jaeger/JaegerSearchTraceQuery
     :response-schema     s/Any}})
 
-
 ;; --- CLIENT OVERRIDES ---
-
-
 (def client-overrides
   {:extend-deserialization
    {"traceID"   :trace-id
