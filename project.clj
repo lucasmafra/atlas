@@ -17,6 +17,8 @@
                                       [com.stuartsierra/component.repl "0.2.0"]
                                       [clj-kondo "2020.02.28-1"]]
                        :source-paths ["dev"]
-                       :plugins [[lein-cljfmt "0.6.6"]]
-                       :aliases {"lint-fix" ["do" "nsorg" "--replace," "kibit" "--replace"]
+                       :plugins [[lein-cljfmt "0.6.6"]
+                                 [lein-kibit "0.1.8"]
+                                 [lein-nsorg "0.3.0"]]
+                       :aliases {"lint-fix" ["do" "nsorg" "--replace," "kibit" "--replace," "cljfmt" "fix"]
                                  "clj-kondo" ["run" "-m" "clj-kondo.main"]}}})
