@@ -19,7 +19,7 @@
 
    :route/get-operations
    {:path               "/api/services/:service/operations"
-    :method             :get    
+    :method             :get
     :path-params-schema {:service s/Str}
     :response-schema    s-operation/GetOperationsResponse
     :handler            (fn [{{:keys [service]} :path-params} components]

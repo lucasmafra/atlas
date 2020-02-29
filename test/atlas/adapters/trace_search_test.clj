@@ -11,12 +11,12 @@
               :limit     10
               :start     1581797873000000
               :end       1582769681000000}
-           (nut/->jaeger-search-trace-query
-            {:service   "service"
-             :operation "operation"
-             :limit     10
-             :start     #epoch 1581797873000
-             :end       #epoch 1582769681000}))))))
+             (nut/->jaeger-search-trace-query
+              {:service   "service"
+               :operation "operation"
+               :limit     10
+               :start     #epoch 1581797873000
+               :end       #epoch 1582769681000}))))))
 
 (s/with-fn-validation
   (deftest ->trace-summary
