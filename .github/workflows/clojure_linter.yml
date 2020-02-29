@@ -11,13 +11,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: autofix test src dev
+          args: test src dev
       - uses: thiagokokada/actions/nsorg@master
         name: nsorg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: autofix test src dev
+          args: test src dev
 
       - uses: DeLaGuardo/clojure-lint-action@v1
         with:
