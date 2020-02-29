@@ -5,4 +5,7 @@
 
   (let [path-params {:path-params {:service service}}]
 
-    (:data (:body (hc-pro/request http-client :jaeger/get-operations path-params)))))
+    (:data (:body
+
+
+            (hc-pro/request http-client :jaeger/get-operations path-params)))))
