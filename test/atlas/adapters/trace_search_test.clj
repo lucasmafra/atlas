@@ -1,6 +1,6 @@
 (ns atlas.adapters.trace-search-test
   (:require [atlas.adapters.trace-search :as nut]
-            [clojure.test :refer :all]
+            [clojure.test :refer [deftest is testing]]
             [schema.core :as s]))
 
 (s/with-fn-validation

@@ -14,6 +14,8 @@
              :dev     {:dependencies [[nubank/matcher-combinators "1.0.0"]
                                       [nubank/state-flow "2.2.4"]
                                       [org.clojure/tools.namespace "0.2.11"]
-                                      [com.stuartsierra/component.repl "0.2.0"]]
+                                      [com.stuartsierra/component.repl "0.2.0"]
+                                      [clj-kondo "2020.02.28-1"]]
                        :source-paths ["dev"]
-                       :aliases {"lint-fix" ["do" "nsorg" "--replace," "kibit" "--replace"]}}})
+                       :aliases {"lint-fix" ["do" "nsorg" "--replace," "kibit" "--replace"]
+                                 "clj-kondo" ["run" "-m" "clj-kondo.main"]}}})
