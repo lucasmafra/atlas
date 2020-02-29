@@ -65,7 +65,7 @@
                                              "number_of_spans" 2}]}
 
                             {"trace_id"    "trace-2"
-                             "total_spans" 2
+                             "total_spans" 3
                              "duration_ms" 2005
                              "start_time"  1500000000000
                              "services"    [{"name"            "feed"
