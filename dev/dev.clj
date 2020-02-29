@@ -1,8 +1,8 @@
 (ns dev
-  (:require [com.stuartsierra.component :as component]
-            [com.stuartsierra.component.repl :refer [set-init start stop reset]]
-            [common-clj.components.config.in-memory-config :as imc]
-            [atlas.system :refer [system]]))
+  (:require [atlas.system :refer [system]]
+            [com.stuartsierra.component :as component]
+            [com.stuartsierra.component.repl :refer [reset set-init start stop]]
+            [common-clj.components.config.in-memory-config :as imc]))
 
 (def config
   {:app-name  :atlas
