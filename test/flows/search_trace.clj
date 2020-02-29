@@ -1,14 +1,9 @@
 (ns flows.search-trace
-  (:require [common-clj.json :as json]
-            [common-clj.state-flow-helpers.config :as config]
+  (:require [common-clj.state-flow-helpers.config :as config]
             [common-clj.state-flow-helpers.http-client :as http-client]
             [common-clj.state-flow-helpers.http-server :as http-server]
             [flows.aux.init :refer [defflow]]
-            [schema.core :as s]
-            [schema.spec.core :as spec]
-            [schema.utils :as utils]
-            [state-flow.assertions.matcher-combinators :refer [match?]]
-            [common-clj.schema :as cs]))
+            [state-flow.assertions.matcher-combinators :refer [match?]]))
 
 (def jaeger-request
   (str "http://jaeger.com/api/traces?"

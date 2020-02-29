@@ -2,8 +2,7 @@
   (:require [com.stuartsierra.component :as component]
             [com.stuartsierra.component.repl :refer [set-init start stop reset]]
             [common-clj.components.config.in-memory-config :as imc]
-            [atlas.system :refer [system]]
-            [schema.core :as s]))
+            [atlas.system :refer [system]]))
 
 (def config
   {:app-name  :atlas

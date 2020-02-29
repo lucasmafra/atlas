@@ -1,6 +1,6 @@
 (ns atlas.domain.trace-search-test
   (:require [atlas.domain.trace-search :as nut]
-            [clojure.test :refer :all]))
+            [clojure.test :refer [deftest is testing]]))
 
 (def trace
   {:trace-i-d "trace-1"
