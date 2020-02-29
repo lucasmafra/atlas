@@ -13,3 +13,20 @@ jobs:
       run: lein deps
     - name: Run tests
       run: lein test
+    - uses: actions/checkout@v2
+    - uses: bltavares/actions/cljfmt@1.0.8
+      name: cljfmt
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        args: autofix test src dev
+    - uses: thiagokokada/actions/nsorg@master
+      name: nsorg
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        args: autofix test src dev
+    - uses: DeLaGuardo/clojure-lint-action@v1
+      with:
+        clj-kondo-args: --lint .
+        github_token: ${{ secrets.GITHUB_TOKEN }}
