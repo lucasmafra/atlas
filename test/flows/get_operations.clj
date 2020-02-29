@@ -1,9 +1,9 @@
 (ns flows.get-operations
-  (:require [common-clj.state-flow-helpers.http-server :as http-server]
-            [flows.aux.init :refer [defflow]]
-            [state-flow.assertions.matcher-combinators :refer [match?]]
+  (:require [common-clj.state-flow-helpers.config :as config]
             [common-clj.state-flow-helpers.http-client :as http-client]
-            [common-clj.state-flow-helpers.config :as config]))
+            [common-clj.state-flow-helpers.http-server :as http-server]
+            [flows.aux.init :refer [defflow]]
+            [state-flow.assertions.matcher-combinators :refer [match?]]))
 
 (def mock-http-client
   {"http://jaeger.com/api/services/orders/operations"

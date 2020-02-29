@@ -1,0 +1,20 @@
+name: Clojure linter
+on:
+  push
+jobs:
+  clojureLint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: bltavares/actions/cljfmt@1.0.8
+        name: cljfmt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: autofix test src dev
+      - uses: thiagokokada/actions/nsorg@master
+        name: nsorg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: autofix test src dev
