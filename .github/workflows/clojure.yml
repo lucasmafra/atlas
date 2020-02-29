@@ -9,11 +9,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Install dependencies
-      run: lein deps
-    - name: Run tests
-      run: lein test
-    - uses: actions/checkout@v2
     - uses: bltavares/actions/cljfmt@1.0.8
       name: cljfmt
       env:
@@ -30,3 +25,7 @@ jobs:
       with:
         clj-kondo-args: --lint .
         github_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Install dependencies
+      run: lein deps
+    - name: Run tests
+      run: lein test
