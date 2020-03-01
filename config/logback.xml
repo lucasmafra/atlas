@@ -45,6 +45,6 @@
 
   <!-- For loggers in the these namespaces, log at all levels. -->
   <logger name="user" level="ALL" />
-  <logger name="io.pedestal" level="INFO" />
+  <logger name="io.pedestal" level="WARN" />
 
 </configuration>

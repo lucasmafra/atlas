@@ -1,12 +1,11 @@
 (ns flows.search-trace
-  (:require [common-clj.state-flow-helpers.config :as config]
-            [common-clj.state-flow-helpers.http-client :as http-client]
+  (:require [common-clj.state-flow-helpers.http-client :as http-client]
             [common-clj.state-flow-helpers.http-server :as http-server]
             [flows.aux.init :refer [defflow]]
             [state-flow.assertions.matcher-combinators :refer [match?]]))
 
 (def jaeger-request
-  (str "http://jaeger.com/api/traces?"
+  (str "{{jaeger}}/api/traces?"
        "service=orders&"
        "operation=place-order&"
        "limit=10&"
@@ -46,8 +45,7 @@
                          "p2" {"serviceName" "orders"}}}]})
 
 (defflow search-trace
-  :pre-conditions [(config/assoc-in! [:known-hosts :jaeger] "http://jaeger.com")
-                   (http-client/mock! {jaeger-request {:status 200 :body jaeger-response}})]
+  :pre-conditions [(http-client/mock! {jaeger-request {:status 200 :body jaeger-response}})]
 
   [response (http-server/request-arrived! :get (str "/api/traces?"
                                                     "service=orders&"
