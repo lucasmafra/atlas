@@ -5,13 +5,9 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [clojure.java-time "0.3.2"]
-                 [lucasmafra/common-clj "1.0.7"]
+                 [lucasmafra/common-clj "1.0.8"]
                  [com.stuartsierra/component "0.4.0"]
-                 [prismatic/schema "1.1.11"]
-                 [ch.qos.logback/logback-classic "1.2.3" :exclusions [org.slf4j/slf4j-api]]
-                 [org.slf4j/jul-to-slf4j "1.7.26"]
-                 [org.slf4j/jcl-over-slf4j "1.7.26"]
-                 [org.slf4j/log4j-over-slf4j "1.7.26"]]
+                 [prismatic/schema "1.1.11"]]
 
   :resource-paths ["config", "resources"]
   :main ^:skip-aot atlas.system
