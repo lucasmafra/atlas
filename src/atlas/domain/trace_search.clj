@@ -20,10 +20,7 @@
         oldest      (first (sort start-times))]
     (instant (/ oldest 1000))))
 
-(defn- safe-inc [value]
-  (if (nil? value)
-    1
-    (inc value)))
+(defn- safe-inc [value] (inc (or value 0)))
 
 (s/defn services-summary :- [s-trace-search/ServiceSummary]
   [{:keys [spans processes]} :- s-jaeger/Trace]
