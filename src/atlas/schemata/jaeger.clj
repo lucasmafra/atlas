@@ -1,6 +1,6 @@
 (ns atlas.schemata.jaeger
-  (:require [common-clj.schema :as cs]
-            [common-clj.schema-helpers :as csh]
+  (:require [common-clj.schema.core :as cs]
+            [common-clj.schema.helpers :as csh]
             [schema.core :as s]))
 
 (def JaegerGetServicesResponse
