@@ -5,7 +5,7 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [clojure.java-time "0.3.2"]
-                 [lucasmafra/common-clj "1.1.0"]
+                 [lucasmafra/common-clj "1.2.0"]
                  [com.stuartsierra/component "0.4.0"]
                  [prismatic/schema "1.1.11"]]
 

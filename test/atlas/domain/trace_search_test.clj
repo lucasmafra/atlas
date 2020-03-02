@@ -15,18 +15,25 @@
                 :process-id    "p2"
                 :operation-name "op-1-2"
                 :start-time     1400000000000000
-                :duration       1001}]
+                :duration       1001}
+               {:trace-id      "trace-3"
+                :span-id       "span-1-3"
+                :process-id    "p3"
+                :operation-name "op-1-3"
+                :start-time     1450000000000000
+                :duration       1002}]
    :processes {:p1 {:service-name "orders"}
-               :p2 {:service-name "feed"}}})
+               :p2 {:service-name "feed"}
+               :p3 {:service-name "orders"}}})
 
 (deftest total-spans
   (testing "returns total spans for trace"
-    (is (= 2
+    (is (= 3
            (nut/total-spans trace)))))
 
 (deftest duration-ms
   (testing "returns sum of all spans' duration in milliseconds"
-    (is (= 2001
+    (is (= 3003
            (nut/duration-ms trace)))))
 
 (deftest start-time
@@ -37,7 +44,7 @@
 (deftest services-summary
   (testing "returns the summary of all services related to the trace"
     (is (= [{:name            "orders"
-             :number-of-spans 1}
+             :number-of-spans 2}
             {:name            "feed"
              :number-of-spans 1}]
            (nut/services-summary trace)))))
