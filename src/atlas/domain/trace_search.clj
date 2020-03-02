@@ -20,9 +20,18 @@
         oldest      (first (sort start-times))]
     (instant (/ oldest 1000))))
 
+(defn- safe-inc [value]
+  (if (nil? value)
+    1
+    (inc value)))
+
 (s/defn services-summary :- [s-trace-search/ServiceSummary]
   [{:keys [spans processes]} :- s-jaeger/Trace]
-  (map (fn [[pid {:keys [service-name]}]]
-         {:name            service-name
-          :number-of-spans (->> spans (filter #(= pid (keyword (:process-id %)))) count)})
-       processes))
+  (->> spans
+       (reduce (fn [acc {:keys [process-id]}]
+                 (let [{:keys [service-name]} (processes (keyword process-id))]
+                   (update acc service-name safe-inc)))
+               {})
+       (map (fn [[name number-of-spans]]
+              {:name            name
+               :number-of-spans number-of-spans}))))
