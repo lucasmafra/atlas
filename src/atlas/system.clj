@@ -3,9 +3,9 @@
   (:require [atlas.ports.http-client :refer [client-overrides client-routes]]
             [atlas.ports.http-server :refer [server-overrides server-routes]]
             [com.stuartsierra.component :as component]
-            [common-clj.components.config.edn-config :as edn-config]
-            [common-clj.components.http-server.http-server :as hs]
-            [common-clj.http-client.clj-http :as hc]))
+            [common-clj.config.edn-config :as edn-config]
+            [common-clj.http-client.http-client :as hc]
+            [common-clj.http-server.http-server :as hs]))
 
 (def system
   (component/system-map

@@ -1,5 +1,5 @@
 (ns atlas.schemata.trace-search
-  (:require [common-clj.schema :as cs]
+  (:require [common-clj.schema.core :as cs]
             [schema.core :as s]))
 
 (def TraceSearchLimit

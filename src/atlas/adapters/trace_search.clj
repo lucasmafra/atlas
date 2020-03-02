@@ -1,7 +1,7 @@
 (ns atlas.adapters.trace-search
   (:require [atlas.schemata.jaeger :as s-jaeger]
             [atlas.schemata.trace-search :as s-trace-search]
-            [common-clj.schema :as cs]
+            [common-clj.schema.core :as cs]
             [schema.core :as s]))
 
 (s/defn ->jaeger-search-trace-query :- s-jaeger/JaegerSearchTraceQuery

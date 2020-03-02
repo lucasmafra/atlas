@@ -2,12 +2,12 @@
   (:require [atlas.system :refer [system]]
             [com.stuartsierra.component :as component]
             [com.stuartsierra.component.repl :refer [reset set-init start stop]]
-            [common-clj.components.config.in-memory-config :as imc]))
+            [common-clj.config.in-memory-config :as imc]))
 
 (def config
   {:app-name  :atlas
    :http-port 9000
-   :known-hosts {:jaeger "DEV JAEGER URL"}})
+   :known-hosts {:jaeger "https://prod-jaeger.nubank.com.br"}})
 
 (def dev-system
   (merge system

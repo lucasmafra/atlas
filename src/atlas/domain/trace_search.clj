@@ -1,7 +1,7 @@
 (ns atlas.domain.trace-search
   (:require [atlas.schemata.jaeger :as s-jaeger]
             [atlas.schemata.trace-search :as s-trace-search]
-            [common-clj.schema :as cs]
+            [common-clj.schema.core :as cs]
             [java-time :refer [instant]]
             [schema.core :as s]))
 

@@ -1,7 +1,7 @@
 (ns flows.aux.init
   (:require [atlas.system :refer [system]]
             [com.stuartsierra.component :as component]
-            [common-clj.components.config.edn-config :as edn-config]
+            [common-clj.config.edn-config :as edn-config]
             [schema.core :as s]
             [state-flow.cljtest :as state-flow.cljtest]
             [state-flow.core :as state-flow]))
