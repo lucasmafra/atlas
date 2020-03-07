@@ -21,7 +21,14 @@
     :path                "/api/traces"
     :method              :get
     :query-params-schema s-jaeger/JaegerSearchTraceQuery
-    :response-schema     s/Any}})
+    :response-schema     s-jaeger/JaegerSearchTraceResponse}
+
+   :jaeger/get-trace
+   {:host               "{{jaeger}}"
+    :path               "/api/traces/:id"
+    :method             :get
+    :path-params-schema {:id s/Str}
+    :response-schema    s-jaeger/TraceResponse}})
 
 ;; --- CLIENT OVERRIDES ---
 (def client-overrides

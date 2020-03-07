@@ -18,13 +18,21 @@
    :start     cs/TimestampMicroseconds
    :end       cs/TimestampMicroseconds})
 
+(def SpanReferenceType (s/enum :child-of :follows-from))
+
+(def SpanReference
+  {:ref-type SpanReferenceType
+   :trace-id s/Str
+   :span-id  s/Str})
+
 (def Span
   {:trace-id       s/Str
    :span-id        s/Str
-   :process-id     s/Str
+   :process-id     s/Keyword
    :operation-name s/Str
    :start-time     cs/TimestampMicroseconds
-   :duration       s/Int})
+   :duration       s/Int
+   :references     [SpanReference]})
 
 (def TraceProcess
   {:service-name s/Str})
@@ -36,6 +44,10 @@
   {:trace-id  s/Str
    :spans     [Span]
    :processes ProcessesMap})
+
+(def TraceResponse
+  (csh/loose-schema
+   {:data [Trace]}))
 
 (def JaegerSearchTraceResponse
   (csh/loose-schema
