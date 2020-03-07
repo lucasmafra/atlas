@@ -1,5 +1,6 @@
 {:linters
- {:unresolved-symbol   {:exclude [(flows.aux.init/defflow)]}
+ {:unresolved-symbol   {:exclude [(flows.aux.init/defflow)
+                                  (common-clj.clojure-test-helpers.core/deftest)]}
   :unused-referred-var {:exclude {com.stuartsierra.component.repl         [start stop reset]
                                   com.stuartsierra.component.user-helpers [dev go reset]}}
   :unused-namespace    {:exclude [com.stuartsierra.component.user-helpers]}}

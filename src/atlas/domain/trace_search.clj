@@ -26,7 +26,7 @@
   [{:keys [spans processes]} :- s-jaeger/Trace]
   (->> spans
        (reduce (fn [acc {:keys [process-id]}]
-                 (let [{:keys [service-name]} (processes (keyword process-id))]
+                 (let [{:keys [service-name]} (processes process-id)]
                    (update acc service-name safe-inc)))
                {})
        (map (fn [[name number-of-spans]]

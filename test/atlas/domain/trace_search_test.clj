@@ -1,27 +1,31 @@
 (ns atlas.domain.trace-search-test
   (:require [atlas.domain.trace-search :as nut]
-            [clojure.test :refer [deftest is testing]]))
+            [clojure.test :refer [is testing]]
+            [common-clj.clojure-test-helpers.core :refer [deftest]]))
 
 (def trace
-  {:trace-i-d "trace-1"
-   :spans     [{:trace-id      "trace-1"
-                :span-id       "span-1-1"
-                :process-id    "p1"
+  {:trace-id  "trace-1"
+   :spans     [{:trace-id       "trace-1"
+                :span-id        "span-1-1"
+                :process-id     :p1
                 :operation-name "op-1-1"
                 :start-time     1500000000000000
-                :duration       1000}
-               {:trace-id      "trace-1"
-                :span-id       "span-1-2"
-                :process-id    "p2"
+                :duration       1000
+                :references     []}
+               {:trace-id       "trace-1"
+                :span-id        "span-1-2"
+                :process-id     :p2
                 :operation-name "op-1-2"
                 :start-time     1400000000000000
-                :duration       1001}
-               {:trace-id      "trace-3"
-                :span-id       "span-1-3"
-                :process-id    "p3"
+                :duration       1001
+                :references     []}
+               {:trace-id       "trace-3"
+                :span-id        "span-1-3"
+                :process-id     :p3
                 :operation-name "op-1-3"
                 :start-time     1450000000000000
-                :duration       1002}]
+                :duration       1002
+                :references     []}]
    :processes {:p1 {:service-name "orders"}
                :p2 {:service-name "feed"}
                :p3 {:service-name "orders"}}})

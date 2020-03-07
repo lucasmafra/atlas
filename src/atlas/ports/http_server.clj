@@ -1,9 +1,11 @@
 (ns atlas.ports.http-server
   (:require [atlas.controllers.operation :as c-operation]
             [atlas.controllers.service :as c-service]
+            [atlas.controllers.trace-graph :as c-trace-graph]
             [atlas.controllers.trace-search :as c-trace-search]
             [atlas.schemata.operation :as s-operation]
             [atlas.schemata.service :as s-service]
+            [atlas.schemata.trace-graph :as s-trace-graph]
             [atlas.schemata.trace-search :as s-trace-search]
             [common-clj.coercion :refer [int-matcher]]
             [common-clj.http-server.interceptors.helpers :refer [ok]]
@@ -33,8 +35,15 @@
     :handler             (fn [{:keys [query-params]} components]
                            (ok {:traces (c-trace-search/search-trace query-params components)}))
     :overrides           {:query-params-coercer
-                          {:extension {s-trace-search/TraceSearchLimit int-matcher}}}}})
+                          {:extension {s-trace-search/TraceSearchLimit int-matcher}}}}
+
+   :route/get-trace-graph
+   {:path               "/api/traces/:id/graph"
+    :method             :get
+    :path-params-schema {:id s/Str}
+    :response-schema    s-trace-graph/TraceGraphResponse
+    :handler            (fn [{{:keys [id]} :path-params} components]
+                          (ok {:graph (c-trace-graph/get-graph id components)}))}})
 
 ;; --- SERVER OVERRIDES ---
 (def server-overrides {})
-
