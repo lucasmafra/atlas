@@ -12,7 +12,13 @@
             [schema.core :as s]))
 
 (def server-routes
-  {:route/get-services
+  {:route/hello
+   {:path            "/"
+    :method          :get
+    :response-schema {:message s/Str}
+    :handler         (constantly (ok {:message "I'm alive"}))}
+
+   :route/get-services
    {:path            "/api/services"
     :method          :get
     :response-schema s-service/GetServicesResponse
