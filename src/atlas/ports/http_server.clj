@@ -1,9 +1,11 @@
 (ns atlas.ports.http-server
   (:require [atlas.controllers.operation :as c-operation]
+            [atlas.controllers.sequence-diagram :as c-sequence-diagram]
             [atlas.controllers.service :as c-service]
             [atlas.controllers.trace-graph :as c-trace-graph]
             [atlas.controllers.trace-search :as c-trace-search]
             [atlas.schemata.operation :as s-operation]
+            [atlas.schemata.sequence-diagram :as s-sequence-diagram]
             [atlas.schemata.service :as s-service]
             [atlas.schemata.trace-graph :as s-trace-graph]
             [atlas.schemata.trace-search :as s-trace-search]
@@ -49,7 +51,15 @@
     :path-params-schema {:id s/Str}
     :response-schema    s-trace-graph/TraceGraphResponse
     :handler            (fn [{{:keys [id]} :path-params} components]
-                          (ok {:graph (c-trace-graph/get-graph id components)}))}})
+                          (ok {:graph (c-trace-graph/get-graph id components)}))}
+
+   :route/get-sequence-diagram
+   {:path               "/api/traces/:id/sequence-diagram"
+    :method             :get
+    :path-params-schema {:id s/Str}
+    :response-schema    s-sequence-diagram/SequenceDiagramResponse
+    :handler            (fn [{{:keys [id]} :path-params} components]
+                          (ok {:sequence-diagram (c-sequence-diagram/get-sequence-diagram id components)}))}})
 
 ;; --- SERVER OVERRIDES ---
 (def server-overrides {})

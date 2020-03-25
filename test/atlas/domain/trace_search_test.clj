@@ -11,21 +11,24 @@
                 :operation-name "op-1-1"
                 :start-time     1500000000000000
                 :duration       1000
-                :references     []}
+                :references     []
+                :tags           []}
                {:trace-id       "trace-1"
                 :span-id        "span-1-2"
                 :process-id     :p2
                 :operation-name "op-1-2"
                 :start-time     1400000000000000
                 :duration       1001
-                :references     []}
+                :references     []
+                :tags           []}
                {:trace-id       "trace-3"
                 :span-id        "span-1-3"
                 :process-id     :p3
                 :operation-name "op-1-3"
                 :start-time     1450000000000000
                 :duration       1002
-                :references     []}]
+                :references     []
+                :tags           []}]
    :processes {:p1 {:service-name "orders"}
                :p2 {:service-name "feed"}
                :p3 {:service-name "orders"}}})

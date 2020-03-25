@@ -25,6 +25,11 @@
    :trace-id s/Str
    :span-id  s/Str})
 
+(def SpanTag
+  {:key   s/Str
+   :type  s/Str
+   :value s/Any})
+
 (def Span
   {:trace-id       s/Str
    :span-id        s/Str
@@ -32,7 +37,8 @@
    :operation-name s/Str
    :start-time     cs/TimestampMicroseconds
    :duration       s/Int
-   :references     [SpanReference]})
+   :references     [SpanReference]
+   :tags           [SpanTag]})
 
 (def TraceProcess
   {:service-name s/Str})
