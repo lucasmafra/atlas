@@ -64,12 +64,12 @@
                :p2 {:service-name "orders"}}})
 
 (deftest start-time
-  (testing "builds start-time from trace"
+  (testing "returns the oldest span start time"
     (is (= #epoch 1500000000000
            (nut/start-time trace)))))
 
 (deftest duration-ms
-  (testing "builds duration from trace"
+  (testing "time between the beginning of the first started span and the end of the last finished span"
     (is (= 1000
            (nut/duration-ms trace)))))
 
