@@ -20,14 +20,16 @@
                           "operationName" "op-1-1"
                           "startTime"     1500000000000000
                           "duration"      1000
-                          "references"    []}
+                          "references"    []
+                          "tags"          []}
                          {"traceID"       "trace-1"
                           "spanID"        "span-1-2"
                           "processID"     "p1"
                           "operationName" "op-1-2"
                           "startTime"     1499999999999999
                           "duration"      1001
-                          "references"    []}]
+                          "references"    []
+                          "tags"          []}]
             "processes" {"p1" {"serviceName" "orders"}}}
 
            {"traceID"   "trace-2"
@@ -37,14 +39,16 @@
                           "operation-name" "op-2-1"
                           "start-time"     1500000000000002
                           "duration"       1002
-                          "references"     []}
+                          "references"     []
+                          "tags"           []}
                          {"traceID"       "trace-2"
                           "spanID"        "span-2-2"
                           "processID"     "p2"
                           "operationName" "op-2-2"
                           "start-time"    1500000000000003
                           "duration"      1003
-                          "references"    []}]
+                          "references"    []
+                          "tags"          []}]
             "processes" {"p1" {"serviceName" "feed"}
                          "p2" {"serviceName" "orders"}}}]})
 

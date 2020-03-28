@@ -13,6 +13,7 @@
                           "operationName" "http.out /api/orders"
                           "startTime"     1499999999999999
                           "references"    []
+                          "tags"          []
                           "duration"      1000}
                          {"traceID"       "1"
                           "spanID"        "span-1-2"
@@ -22,6 +23,7 @@
                           "references"    [{"ref-type" "CHILD_OF"
                                             "trace-id" "1"
                                             "span-id"  "span-1-1"}]
+                          "tags"          []
                           "duration"      1001}]
             "processes" {"p1" {"serviceName" "frontend"}
                          "p2" {"serviceName" "orders"}}}]})
