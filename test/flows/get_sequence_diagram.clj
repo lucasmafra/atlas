@@ -85,9 +85,12 @@
                                           "arrows"          [{"id"         "2"
                                                               "from"       "bff"
                                                               "to"         "orders"
-                                                              "start_time" 1500000000100}
+                                                              "start_time" 1500000000100
+                                                              "prefix"     "GET"
+                                                              "label"      "/api/orders/1"}
                                                              {"id"         "3"
                                                               "from"       "orders"
                                                               "to"         "bff"
-                                                              "start_time" 1500000000400}]}}}
+                                                              "start_time" 1500000000400
+                                                              "label"      "response"}]}}}
             response)))
