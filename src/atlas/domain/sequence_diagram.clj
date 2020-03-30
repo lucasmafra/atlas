@@ -36,6 +36,12 @@
 (defn- find-child [span trace]
   (->> trace :spans (filter (child-of? span)) first))
 
+(defn- span->http-method [span]
+  (->> span :tags (filter #(= "http.method" (:key %))) first :value))
+
+(defn- span->http-url [span]
+  (->> span :tags (filter #(= "http.url" (:key %))) first :value))
+
 (defn- span->arrow-pair [trace]
   (fn [acc out-span]
     (if-let [child-span (find-child out-span trace)]
@@ -43,11 +49,14 @@
             {:id         (:span-id out-span)
              :from       (span->service-name out-span trace)
              :to         (span->service-name child-span trace)
-             :start-time (microseconds->epoch (:start-time out-span))}
+             :start-time (microseconds->epoch (:start-time out-span))
+             :prefix     (span->http-method out-span)
+             :label      (span->http-url out-span)}
             {:id         (:span-id child-span)
              :from       (span->service-name child-span trace)
              :to         (span->service-name out-span trace)
-             :start-time (span->end-time out-span)})
+             :start-time (span->end-time out-span)
+             :label      "response"})
       acc)))
 
 (s/defn start-time :- cs/EpochMillis
@@ -74,3 +83,4 @@
   [trace :- s-jaeger/Trace]
   (let [out-spans (->> trace :spans (filter out-span?))]
     (reduce (span->arrow-pair trace) [] out-spans)))
+

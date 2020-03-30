@@ -96,9 +96,12 @@
     (is (= [{:id         "2"
              :from       "bff"
              :to         "orders"
-             :start-time #epoch 1500000000100}
+             :start-time #epoch 1500000000100
+             :prefix     "GET"
+             :label      "/api/orders/1"}
             {:id         "3"
              :from       "orders"
              :to         "bff"
-             :start-time #epoch 1500000000400}]
+             :start-time #epoch 1500000000400
+             :label      "response"}]
            (nut/arrows trace)))))
