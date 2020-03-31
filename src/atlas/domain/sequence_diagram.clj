@@ -69,10 +69,30 @@
         end-time (->> trace :spans (map span->end-time) sort last)]
     (.toMillis (time/duration start-time end-time))))
 
+(defn- process->lifeline [[_ {:keys [service-name]}]]
+  {:name service-name})
+
+(defn- producer-span? [{:keys [tags]}]
+  (->> tags
+       (filter #(and (= "span.kind" (:key %))
+                     (= "producer" (:value %))))
+       first
+       boolean))
+
+(defn- span->topic [{:keys [tags]}]
+  (->> tags
+       (filter #(= "message_bus.destination" (:key %)))
+       first
+       :value))
+
+(defn- topic->lifeline [topic]
+  {:name topic})
+
 (s/defn lifelines :- [s-sequence-diagram/Lifeline]
   [trace :- s-jaeger/Trace]
-  (->> trace :processes (map (fn [[_ {:keys [service-name]}]]
-                               {:name service-name}))))
+  (let [services (->> trace :processes (map process->lifeline))
+        topics (->> trace :spans (filter producer-span?) (map span->topic) (map topic->lifeline))]
+    (concat services topics)))
 
 (s/defn execution-boxes :- [s-sequence-diagram/ExecutionBox]
   [trace :- s-jaeger/Trace]

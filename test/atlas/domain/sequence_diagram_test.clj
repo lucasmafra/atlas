@@ -58,7 +58,22 @@
                                 :value "GET"}
                                {:key   "http.url"
                                 :type  "string"
-                                :value "/api/orders/1"}]}]
+                                :value "/api/orders/1"}]}
+              {:trace-id       "1"
+               :span-id        "4"
+               :process-id     :p2
+               :operation-name "kafka.out PROCESS_ORDER"
+               :start-time     1500000000250000
+               :duration      50
+               :references    [{:ref-type :child-of
+                                :trace-id "1"
+                                :span-id  "3"}]
+               :tags          [{:key   "span.kind"
+                                :type  "string"
+                                :value "producer"}
+                               {:key   "message_bus.destination"
+                                :type  "string"
+                                :value "PROCESS_ORDER"}]}]
 
    :processes {:p1 {:service-name "bff"}
                :p2 {:service-name "orders"}}})
@@ -76,7 +91,8 @@
 (deftest lifelines
   (testing "builds lifelines from trace"
     (is (= [{:name "bff"}
-            {:name "orders"}]
+            {:name "orders"}
+            {:name "PROCESS_ORDER"}]
            (nut/lifelines trace)))))
 
 (deftest execution-boxes
