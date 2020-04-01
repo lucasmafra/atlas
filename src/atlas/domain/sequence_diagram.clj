@@ -11,13 +11,21 @@
   (let [start-epoch (microseconds->epoch start-time)]
     (time/plus start-epoch (time/millis duration))))
 
-(defn- http-server-tag? [{:keys [value]}] (= "server" value))
+(defn- match-tag?
+  ([k] #(= k (:key %)))
+  ([k v] (every-pred #(= k (:key %)) #(= v (:value %)))))
 
-(defn- http-client-tag? [{:keys [value]}] (= "client" value))
+(defn- find-tag
+  ([k tags] (->> tags (filter (match-tag? k)) first))
+  ([k v tags] (->> tags (filter (match-tag? k v)) first)))
 
-(defn- in-span? [{:keys [tags]}] (boolean (first (filter http-server-tag? tags))))
+(def has-tag?  (comp boolean find-tag))
 
-(defn- out-span? [{:keys [tags]}] (boolean (first (filter http-client-tag? tags))))
+(defn- server-span? [{:keys [tags]}] (has-tag? "span.kind" "server" tags))
+
+(defn- client-span? [{:keys [tags]}] (has-tag? "span.kind" "client" tags))
+
+(defn- producer-span? [{:keys [tags]}] (has-tag? "span.kind" "producer" tags))
 
 (defn- span->service-name [{:keys [process-id]} trace]
   (-> trace :processes process-id :service-name))
@@ -31,16 +39,19 @@
 
 (defn- child-of? [{:keys [span-id]}]
   (fn [{:keys [references]}]
-    (boolean (first (filter #(= span-id (:span-id %)) references)))))
+    (->> references (filter #(= span-id (:span-id %))) first boolean)))
 
-(defn- find-child [span trace]
-  (->> trace :spans (filter (child-of? span)) first))
+(defn- find-child [span trace] (->> trace :spans (filter (child-of? span)) first))
 
-(defn- span->http-method [span]
-  (->> span :tags (filter #(= "http.method" (:key %))) first :value))
+(defn- span->http-method [{:keys [tags]}] (->> tags (find-tag "http.method") :value))
 
-(defn- span->http-url [span]
-  (->> span :tags (filter #(= "http.url" (:key %))) first :value))
+(defn- span->http-url [{:keys [tags]}] (->> tags (find-tag "http.url") :value))
+
+(defn- process->lifeline [[_ {:keys [service-name]}]] {:name service-name})
+
+(defn- span->topic [{:keys [tags]}] (->> tags (find-tag "message_bus.destination") :value))
+
+(defn- topic->lifeline [topic] {:name topic})
 
 (defn- span->arrow-pair [trace]
   (fn [acc out-span]
@@ -69,25 +80,6 @@
         end-time (->> trace :spans (map span->end-time) sort last)]
     (.toMillis (time/duration start-time end-time))))
 
-(defn- process->lifeline [[_ {:keys [service-name]}]]
-  {:name service-name})
-
-(defn- producer-span? [{:keys [tags]}]
-  (->> tags
-       (filter #(and (= "span.kind" (:key %))
-                     (= "producer" (:value %))))
-       first
-       boolean))
-
-(defn- span->topic [{:keys [tags]}]
-  (->> tags
-       (filter #(= "message_bus.destination" (:key %)))
-       first
-       :value))
-
-(defn- topic->lifeline [topic]
-  {:name topic})
-
 (s/defn lifelines :- [s-sequence-diagram/Lifeline]
   [trace :- s-jaeger/Trace]
   (let [services (->> trace :processes (map process->lifeline))
@@ -96,11 +88,10 @@
 
 (s/defn execution-boxes :- [s-sequence-diagram/ExecutionBox]
   [trace :- s-jaeger/Trace]
-  (let [in-spans (->> trace :spans (filter in-span?))]
-    (map (span->execution-box trace) in-spans)))
+  (let [server-spans (->> trace :spans (filter server-span?))]
+    (map (span->execution-box trace) server-spans)))
 
 (s/defn arrows :- [s-sequence-diagram/Arrow]
   [trace :- s-jaeger/Trace]
-  (let [out-spans (->> trace :spans (filter out-span?))]
-    (reduce (span->arrow-pair trace) [] out-spans)))
-
+  (let [client-spans (->> trace :spans (filter client-span?))]
+    (reduce (span->arrow-pair trace) [] client-spans)))
