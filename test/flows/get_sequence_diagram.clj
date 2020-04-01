@@ -59,7 +59,22 @@
                                           "value" "GET"}
                                          {"key"   "http.url"
                                           "type"  "string"
-                                          "value" "/api/orders/1"}]}]
+                                          "value" "/api/orders/1"}]}
+                       {"traceID"       "1"
+                        "spanID"        "4"
+                        "processID"     "p2"
+                        "operationName" "kafka.out PROCESS_ORDER"
+                        "startTime"     1500000000250000
+                        "duration"      50
+                        "references"    [{"ref-type" "CHILD_OF"
+                                          "traceID"  "1"
+                                          "spanID"   "3"}]
+                        "tags"          [{"key"   "span.kind"
+                                          "type"  "string"
+                                          "value" "producer"}
+                                         {"key"   "message_bus.destination"
+                                          "type"  "string"
+                                          "value" "PROCESS_ORDER"}]}]
 
             "processes" {"p1" {"serviceName" "bff"}
                          "p2" {"serviceName" "orders"}}}]})
@@ -73,7 +88,8 @@
              :body   {"sequence_diagram" {"start_time"      1500000000000
                                           "duration_ms"     1000
                                           "lifelines"       [{"name" "bff"}
-                                                             {"name" "orders"}]
+                                                             {"name" "orders"}
+                                                             {"name" "PROCESS_ORDER"}]
                                           "execution_boxes" [{"id"          "1"
                                                               "start_time"  1500000000000
                                                               "duration_ms" 1000
