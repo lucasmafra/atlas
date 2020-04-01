@@ -73,6 +73,21 @@
                                 :value "producer"}
                                {:key   "message_bus.destination"
                                 :type  "string"
+                                :value "PROCESS_ORDER"}]}
+              {:trace-id       "1"
+               :span-id        "5"
+               :process-id     :p2
+               :operation-name "kafka.in PROCESS_ORDER"
+               :start-time     1500000000350000
+               :duration      50
+               :references    [{:ref-type :child-of
+                                :trace-id "1"
+                                :span-id  "4"}]
+               :tags          [{:key   "span.kind"
+                                :type  "string"
+                                :value "consumer"}
+                               {:key   "message_bus.destination"
+                                :type  "string"
                                 :value "PROCESS_ORDER"}]}]
 
    :processes {:p1 {:service-name "bff"}
@@ -104,6 +119,10 @@
             {:id          "3"
              :start-time  #epoch 1500000000200
              :duration-ms 100
+             :lifeline    "orders"}
+            {:id          "5"
+             :start-time  #epoch 1500000000350
+             :duration-ms 50
              :lifeline    "orders"}]
            (nut/execution-boxes trace)))))
 

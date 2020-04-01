@@ -23,6 +23,8 @@
 
 (defn- server-span? [{:keys [tags]}] (has-tag? "span.kind" "server" tags))
 
+(defn- consumer-span? [{:keys [tags]}] (has-tag? "span.kind" "consumer" tags))
+
 (defn- client-span? [{:keys [tags]}] (has-tag? "span.kind" "client" tags))
 
 (defn- producer-span? [{:keys [tags]}] (has-tag? "span.kind" "producer" tags))
@@ -88,8 +90,9 @@
 
 (s/defn execution-boxes :- [s-sequence-diagram/ExecutionBox]
   [trace :- s-jaeger/Trace]
-  (let [server-spans (->> trace :spans (filter server-span?))]
-    (map (span->execution-box trace) server-spans)))
+  (let [server-spans (->> trace :spans (filter server-span?))
+        consumer-spans (->> trace :spans (filter consumer-span?))]
+    (map (span->execution-box trace) (concat server-spans consumer-spans))))
 
 (s/defn arrows :- [s-sequence-diagram/Arrow]
   [trace :- s-jaeger/Trace]
