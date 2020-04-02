@@ -86,7 +86,7 @@
   [{:keys [spans processes]} :- s-jaeger/Trace]
   (let [services (->> processes (map process->lifeline))
         topics   (->> spans (filter producer-span?) (map span->topic) (map topic->lifeline))]
-    (concat services topics)))
+    (->> services (concat topics) set vec)))
 
 (s/defn execution-boxes :- [s-sequence-diagram/ExecutionBox]
   [trace :- s-jaeger/Trace]
