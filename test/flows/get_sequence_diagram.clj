@@ -2,7 +2,8 @@
   (:require [common-clj.state-flow-helpers.http-client :as http-client]
             [common-clj.state-flow-helpers.http-server :refer [GET]]
             [flows.aux.init :refer [defflow]]
-            [state-flow.assertions.matcher-combinators :refer [match?]]))
+            [state-flow.assertions.matcher-combinators :refer [match?]]
+            [matcher-combinators.matchers :as m]))
 
 (def jaeger-response
   {"data" [{"traceID" "1"
@@ -102,9 +103,9 @@
     (match? {:status 200
              :body   {"sequence_diagram" {"start_time"      1500000000000
                                           "duration_ms"     1000
-                                          "lifelines"       [{"name" "bff"}
-                                                             {"name" "orders"}
-                                                             {"name" "PROCESS_ORDER"}]
+                                          "lifelines"       (m/in-any-order [{"name" "bff"}
+                                                                             {"name" "orders"}
+                                                                             {"name" "PROCESS_ORDER"}])
                                           "execution_boxes" [{"id"          "1"
                                                               "start_time"  1500000000000
                                                               "duration_ms" 1000
