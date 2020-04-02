@@ -2,95 +2,95 @@
   (:require [common-clj.state-flow-helpers.http-client :as http-client]
             [common-clj.state-flow-helpers.http-server :refer [GET]]
             [flows.aux.init :refer [defflow]]
-            [state-flow.assertions.matcher-combinators :refer [match?]]
-            [matcher-combinators.matchers :as m]))
+            [matcher-combinators.matchers :as m]
+            [state-flow.assertions.matcher-combinators :refer [match?]]))
 
 (def jaeger-response
-  {"data" [{"traceID" "1"
-            "spans"   [{"traceID"       "1"
-                        "spanID"        "1"
-                        "processID"     "p1"
-                        "operationName" "http.in GET /api/orders/1"
-                        "startTime"     1500000000000000
-                        "duration"      1000
-                        "references"    []
-                        "tags"          [{"key"   "span.kind"
-                                          "type"  "string"
-                                          "value" "server"}
-                                         {"key"   "http.method"
-                                          "type"  "string"
-                                          "value" "GET"}
-                                         {"key"   "http.url"
-                                          "type"  "string"
-                                          "value" "/api/orders/1"}]}
+  {"data" [{"traceID"   "1"
+            "spans"     [{"traceID"       "1"
+                          "spanID"        "1"
+                          "processID"     "p1"
+                          "operationName" "http.in GET /api/orders/1"
+                          "startTime"     1500000000000000
+                          "duration"      1000
+                          "references"    []
+                          "tags"          [{"key"   "span.kind"
+                                            "type"  "string"
+                                            "value" "server"}
+                                           {"key"   "http.method"
+                                            "type"  "string"
+                                            "value" "GET"}
+                                           {"key"   "http.url"
+                                            "type"  "string"
+                                            "value" "/api/orders/1"}]}
 
-                       {"traceID"       "1"
-                        "spanID"        "2"
-                        "processID"     "p1"
-                        "operationName" "http.out GET /api/orders/1"
-                        "startTime"     1500000000100000
-                        "duration"      300
-                        "references"    [{"ref-type" "CHILD_OF"
-                                          "traceID"  "1"
-                                          "spanID"   "1"}]
-                        "tags"          [{"key"   "span.kind"
-                                          "type"  "string"
-                                          "value" "client"}
-                                         {"key"   "http.method"
-                                          "type"  "string"
-                                          "value" "GET"}
-                                         {"key"   "http.url"
-                                          "type"  "string"
-                                          "value" "/api/orders/1"}]}
+                         {"traceID"       "1"
+                          "spanID"        "2"
+                          "processID"     "p1"
+                          "operationName" "http.out GET /api/orders/1"
+                          "startTime"     1500000000100000
+                          "duration"      300
+                          "references"    [{"ref-type" "CHILD_OF"
+                                            "traceID"  "1"
+                                            "spanID"   "1"}]
+                          "tags"          [{"key"   "span.kind"
+                                            "type"  "string"
+                                            "value" "client"}
+                                           {"key"   "http.method"
+                                            "type"  "string"
+                                            "value" "GET"}
+                                           {"key"   "http.url"
+                                            "type"  "string"
+                                            "value" "/api/orders/1"}]}
 
-                       {"traceID"       "1"
-                        "spanID"        "3"
-                        "processID"     "p2"
-                        "operationName" "http.in GET /api/orders/1"
-                        "startTime"     1500000000200000
-                        "duration"      100
-                        "references"    [{"ref-type" "CHILD_OF"
-                                          "traceID"  "1"
-                                          "spanID"   "2"}]
-                        "tags"          [{"key"   "span.kind"
-                                          "type"  "string"
-                                          "value" "server"}
-                                         {"key"   "http.method"
-                                          "type"  "string"
-                                          "value" "GET"}
-                                         {"key"   "http.url"
-                                          "type"  "string"
-                                          "value" "/api/orders/1"}]}
-                       {"traceID"       "1"
-                        "spanID"        "4"
-                        "processID"     "p2"
-                        "operationName" "kafka.out PROCESS_ORDER"
-                        "startTime"     1500000000250000
-                        "duration"      50
-                        "references"    [{"ref-type" "CHILD_OF"
-                                          "traceID"  "1"
-                                          "spanID"   "3"}]
-                        "tags"          [{"key"   "span.kind"
-                                          "type"  "string"
-                                          "value" "producer"}
-                                         {"key"   "message_bus.destination"
-                                          "type"  "string"
-                                          "value" "PROCESS_ORDER"}]}
-                       {"traceID"       "1"
-                        "spanID"        "5"
-                        "processID"     "p2"
-                        "operationName" "kafka.in PROCESS_ORDER"
-                        "startTime"     1500000000350000
-                        "duration"      50
-                        "references"    [{"ref-type" "CHILD_OF"
-                                          "traceID"  "1"
-                                          "spanID"   "4"}]
-                        "tags"          [{"key"   "span.kind"
-                                          "type"  "string"
-                                          "value" "consumer"}
-                                         {"key"   "message_bus.destination"
-                                          "type"  "string"
-                                          "value" "PROCESS_ORDER"}]}]
+                         {"traceID"       "1"
+                          "spanID"        "3"
+                          "processID"     "p2"
+                          "operationName" "http.in GET /api/orders/1"
+                          "startTime"     1500000000200000
+                          "duration"      100
+                          "references"    [{"ref-type" "CHILD_OF"
+                                            "traceID"  "1"
+                                            "spanID"   "2"}]
+                          "tags"          [{"key"   "span.kind"
+                                            "type"  "string"
+                                            "value" "server"}
+                                           {"key"   "http.method"
+                                            "type"  "string"
+                                            "value" "GET"}
+                                           {"key"   "http.url"
+                                            "type"  "string"
+                                            "value" "/api/orders/1"}]}
+                         {"traceID"       "1"
+                          "spanID"        "4"
+                          "processID"     "p2"
+                          "operationName" "kafka.out PROCESS_ORDER"
+                          "startTime"     1500000000250000
+                          "duration"      50
+                          "references"    [{"ref-type" "CHILD_OF"
+                                            "traceID"  "1"
+                                            "spanID"   "3"}]
+                          "tags"          [{"key"   "span.kind"
+                                            "type"  "string"
+                                            "value" "producer"}
+                                           {"key"   "message_bus.destination"
+                                            "type"  "string"
+                                            "value" "PROCESS_ORDER"}]}
+                         {"traceID"       "1"
+                          "spanID"        "5"
+                          "processID"     "p2"
+                          "operationName" "kafka.in PROCESS_ORDER"
+                          "startTime"     1500000000350000
+                          "duration"      50
+                          "references"    [{"ref-type" "CHILD_OF"
+                                            "traceID"  "1"
+                                            "spanID"   "4"}]
+                          "tags"          [{"key"   "span.kind"
+                                            "type"  "string"
+                                            "value" "consumer"}
+                                           {"key"   "message_bus.destination"
+                                            "type"  "string"
+                                            "value" "PROCESS_ORDER"}]}]
 
             "processes" {"p1" {"serviceName" "bff"}
                          "p2" {"serviceName" "orders"}}}]})

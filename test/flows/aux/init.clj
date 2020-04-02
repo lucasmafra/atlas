@@ -27,6 +27,6 @@
                                  [(second forms) (rest (rest forms))]
                                  [[] forms])]
     `(state-flow.cljtest/defflow ~name {:runner run!*
-                                        :init #(init! {})}
+                                        :init   #(init! {})}
        ~@pre-conditions
        ~@flows)))
