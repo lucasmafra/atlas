@@ -77,13 +77,13 @@
 (s/defn duration-ms :- cs/PosInt
   [trace :- s-jaeger/Trace]
   (let [start-time (start-time trace)
-        end-time (->> trace :spans (map span->end-time) sort last)]
+        end-time   (->> trace :spans (map span->end-time) sort last)]
     (.toMillis (time/duration start-time end-time))))
 
 (s/defn lifelines :- [s-sequence-diagram/Lifeline]
   [trace :- s-jaeger/Trace]
   (let [services (->> trace :processes (map process->lifeline))
-        topics (->> trace :spans (filter producer-span?) (map span->topic) (map topic->lifeline))]
+        topics   (->> trace :spans (filter producer-span?) (map span->topic) (map topic->lifeline))]
     (concat services topics)))
 
 (s/defn execution-boxes :- [s-sequence-diagram/ExecutionBox]
