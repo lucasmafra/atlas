@@ -37,8 +37,8 @@
   [response (GET "/api/traces/1/graph")]
 
   (match? {:status 200
-           :body {"graph" {"nodes" (m/in-any-order [{"service" "frontend"}
-                                                    {"service" "orders"}])
-                           "edges" [{"from" "frontend"
-                                     "to"   "orders"}]}}}
+           :body   {"graph" {"nodes" (m/in-any-order [{"service" "frontend"}
+                                                      {"service" "orders"}])
+                             "edges" [{"from" "frontend"
+                                       "to"   "orders"}]}}}
           response))

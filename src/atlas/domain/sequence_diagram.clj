@@ -84,7 +84,7 @@
 
 (s/defn lifelines :- [s-sequence-diagram/Lifeline]
   [{:keys [spans processes]} :- s-jaeger/Trace]
-  (let [services (->> processes (map process->lifeline))
+  (let [services (map process->lifeline processes)
         topics   (->> spans (filter producer-span?) (map span->topic) (map topic->lifeline))]
     (concat services topics)))
 
