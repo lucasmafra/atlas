@@ -12,15 +12,15 @@
                :start-time     1500000000000000
                :duration       1000
                :references     []
-               :tags          [{:key   "span.kind"
-                                :type  "string"
-                                :value "server"}
-                               {:key   "http.method"
-                                :type  "string"
-                                :value "GET"}
-                               {:key   "http.url"
-                                :type  "string"
-                                :value "/api/orders/1"}]}
+               :tags           [{:key   "span.kind"
+                                 :type  "string"
+                                 :value "server"}
+                                {:key   "http.method"
+                                 :type  "string"
+                                 :value "GET"}
+                                {:key   "http.url"
+                                 :type  "string"
+                                 :value "/api/orders/1"}]}
 
               {:trace-id       "1"
                :span-id        "2"
@@ -31,15 +31,15 @@
                :references     [{:ref-type :child-of
                                  :trace-id "1"
                                  :span-id  "1"}]
-               :tags          [{:key   "span.kind"
-                                :type  "string"
-                                :value "client"}
-                               {:key   "http.method"
-                                :type  "string"
-                                :value "GET"}
-                               {:key   "http.url"
-                                :type  "string"
-                                :value "/api/orders/1"}]}
+               :tags           [{:key   "span.kind"
+                                 :type  "string"
+                                 :value "client"}
+                                {:key   "http.method"
+                                 :type  "string"
+                                 :value "GET"}
+                                {:key   "http.url"
+                                 :type  "string"
+                                 :value "/api/orders/1"}]}
 
               {:trace-id       "1"
                :span-id        "3"
@@ -50,45 +50,45 @@
                :references     [{:ref-type :child-of
                                  :trace-id "1"
                                  :span-id  "2"}]
-               :tags          [{:key   "span.kind"
-                                :type  "string"
-                                :value "server"}
-                               {:key   "http.method"
-                                :type  "string"
-                                :value "GET"}
-                               {:key   "http.url"
-                                :type  "string"
-                                :value "/api/orders/1"}]}
+               :tags           [{:key   "span.kind"
+                                 :type  "string"
+                                 :value "server"}
+                                {:key   "http.method"
+                                 :type  "string"
+                                 :value "GET"}
+                                {:key   "http.url"
+                                 :type  "string"
+                                 :value "/api/orders/1"}]}
               {:trace-id       "1"
                :span-id        "4"
                :process-id     :p2
                :operation-name "kafka.out PROCESS_ORDER"
                :start-time     1500000000250000
-               :duration      50
-               :references    [{:ref-type :child-of
-                                :trace-id "1"
-                                :span-id  "3"}]
-               :tags          [{:key   "span.kind"
-                                :type  "string"
-                                :value "producer"}
-                               {:key   "message_bus.destination"
-                                :type  "string"
-                                :value "PROCESS_ORDER"}]}
+               :duration       50
+               :references     [{:ref-type :child-of
+                                 :trace-id "1"
+                                 :span-id  "3"}]
+               :tags           [{:key   "span.kind"
+                                 :type  "string"
+                                 :value "producer"}
+                                {:key   "message_bus.destination"
+                                 :type  "string"
+                                 :value "PROCESS_ORDER"}]}
               {:trace-id       "1"
                :span-id        "5"
                :process-id     :p2
                :operation-name "kafka.in PROCESS_ORDER"
                :start-time     1500000000350000
-               :duration      50
-               :references    [{:ref-type :child-of
-                                :trace-id "1"
-                                :span-id  "4"}]
-               :tags          [{:key   "span.kind"
-                                :type  "string"
-                                :value "consumer"}
-                               {:key   "message_bus.destination"
-                                :type  "string"
-                                :value "PROCESS_ORDER"}]}]
+               :duration       50
+               :references     [{:ref-type :child-of
+                                 :trace-id "1"
+                                 :span-id  "4"}]
+               :tags           [{:key   "span.kind"
+                                 :type  "string"
+                                 :value "consumer"}
+                                {:key   "message_bus.destination"
+                                 :type  "string"
+                                 :value "PROCESS_ORDER"}]}]
 
    :processes {:p1 {:service-name "bff"}
                :p2 {:service-name "orders"}}})
