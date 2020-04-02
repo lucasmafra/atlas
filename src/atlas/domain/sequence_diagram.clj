@@ -72,6 +72,24 @@
              :label      "response"})
       acc)))
 
+(defn- producer-span->arrow [trace]
+  (fn [acc producer-span]
+    (conj acc
+          {:id (:span-id producer-span)
+           :from (span->service-name producer-span trace)
+           :to (span->topic producer-span)
+           :start-time (microseconds->epoch (:start-time producer-span))
+           :label "produce"})))
+
+(defn- consumer-span->arrow [trace]
+  (fn [acc consumer-span]
+    (conj acc
+          {:id (:span-id consumer-span)
+           :from (span->topic consumer-span)
+           :to (span->service-name consumer-span trace)
+           :start-time (microseconds->epoch (:start-time consumer-span))
+           :label "consume"})))
+
 (s/defn start-time :- cs/EpochMillis
   [trace :- s-jaeger/Trace]
   (->> trace :spans (map :start-time) sort first microseconds->epoch))
@@ -96,5 +114,19 @@
 
 (s/defn arrows :- [s-sequence-diagram/Arrow]
   [trace :- s-jaeger/Trace]
-  (let [client-spans (->> trace :spans (filter client-span?))]
-    (reduce (span->arrow-pair trace) [] client-spans)))
+  (let [client-span-arrows (->> trace
+                                :spans
+                                (filter client-span?)
+                                (reduce (span->arrow-pair trace) []))
+        producer-arrows (->> trace
+                             :spans
+                             (filter producer-span?)
+                             (reduce (producer-span->arrow trace) []))
+        consumer-arrows (->> trace
+                             :spans
+                             (filter consumer-span?)
+                             (reduce (consumer-span->arrow trace) []))]
+    (concat
+     client-span-arrows
+     producer-arrows
+     consumer-arrows)))
