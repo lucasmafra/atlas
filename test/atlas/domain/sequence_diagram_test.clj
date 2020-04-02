@@ -1,7 +1,9 @@
 (ns atlas.domain.sequence-diagram-test
   (:require [atlas.domain.sequence-diagram :as nut]
             [clojure.test :refer [is testing]]
-            [common-clj.clojure-test-helpers.core :refer [deftest]]))
+            [common-clj.clojure-test-helpers.core :refer [deftest]]
+            [matcher-combinators.matchers :as m]
+            [matcher-combinators.core :refer [match]]))
 
 (def trace
   {:trace-id "1"
@@ -76,7 +78,7 @@
                                  :value "PROCESS_ORDER"}]}
               {:trace-id       "1"
                :span-id        "5"
-               :process-id     :p2
+               :process-id     :p3
                :operation-name "kafka.in PROCESS_ORDER"
                :start-time     1500000000350000
                :duration       50
@@ -91,7 +93,8 @@
                                  :value "PROCESS_ORDER"}]}]
 
    :processes {:p1 {:service-name "bff"}
-               :p2 {:service-name "orders"}}})
+               :p2 {:service-name "orders"}
+               :p3 {:service-name "orders"}}})
 
 (deftest start-time
   (testing "returns the oldest span start time"
@@ -105,10 +108,9 @@
 
 (deftest lifelines
   (testing "builds lifelines from trace"
-    (is (= [{:name "bff"}
-            {:name "orders"}
-            {:name "PROCESS_ORDER"}]
-           (nut/lifelines trace)))))
+    (is (match (m/in-any-order [{:name "bff"}
+                                {:name "orders"}
+                                {:name "PROCESS_ORDER"}]) (nut/lifelines trace)))))
 
 (deftest execution-boxes
   (testing "builds execution boxes from trace"
