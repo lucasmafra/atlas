@@ -138,5 +138,15 @@
              :from       "orders"
              :to         "bff"
              :start-time #epoch 1500000000400
-             :label      "response"}]
+             :label      "response"}
+            {:id         "4"
+             :from       "orders"
+             :to         "PROCESS_ORDER"
+             :start-time #epoch 1500000000250
+             :label      "produce"}
+            {:id         "5"
+             :from       "PROCESS_ORDER"
+             :to         "orders"
+             :start-time #epoch 1500000000350
+             :label      "consume"}]
            (nut/arrows trace)))))
