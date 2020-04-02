@@ -74,6 +74,21 @@
                                           "value" "producer"}
                                          {"key"   "message_bus.destination"
                                           "type"  "string"
+                                          "value" "PROCESS_ORDER"}]}
+                       {"traceID"       "1"
+                        "spanID"        "5"
+                        "processID"     "p2"
+                        "operationName" "kafka.in PROCESS_ORDER"
+                        "startTime"     1500000000350000
+                        "duration"      50
+                        "references"    [{"ref-type" "CHILD_OF"
+                                          "traceID"  "1"
+                                          "spanID"   "4"}]
+                        "tags"          [{"key"   "span.kind"
+                                          "type"  "string"
+                                          "value" "consumer"}
+                                         {"key"   "message_bus.destination"
+                                          "type"  "string"
                                           "value" "PROCESS_ORDER"}]}]
 
             "processes" {"p1" {"serviceName" "bff"}
@@ -97,6 +112,10 @@
                                                              {"id"          "3"
                                                               "start_time"  1500000000200
                                                               "duration_ms" 100
+                                                              "lifeline"    "orders"}
+                                                             {"id"          "5"
+                                                              "start_time"  1500000000350
+                                                              "duration_ms" 50
                                                               "lifeline"    "orders"}]
                                           "arrows"          [{"id"         "2"
                                                               "from"       "bff"

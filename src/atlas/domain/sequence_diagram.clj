@@ -19,9 +19,11 @@
   ([k tags] (->> tags (filter (match-tag? k)) first))
   ([k v tags] (->> tags (filter (match-tag? k v)) first)))
 
-(def has-tag?  (comp boolean find-tag))
+(def has-tag? (comp boolean find-tag))
 
 (defn- server-span? [{:keys [tags]}] (has-tag? "span.kind" "server" tags))
+
+(defn- consumer-span? [{:keys [tags]}] (has-tag? "span.kind" "consumer" tags))
 
 (defn- client-span? [{:keys [tags]}] (has-tag? "span.kind" "client" tags))
 
@@ -77,19 +79,20 @@
 (s/defn duration-ms :- cs/PosInt
   [trace :- s-jaeger/Trace]
   (let [start-time (start-time trace)
-        end-time (->> trace :spans (map span->end-time) sort last)]
+        end-time   (->> trace :spans (map span->end-time) sort last)]
     (.toMillis (time/duration start-time end-time))))
 
 (s/defn lifelines :- [s-sequence-diagram/Lifeline]
-  [trace :- s-jaeger/Trace]
-  (let [services (->> trace :processes (map process->lifeline))
-        topics (->> trace :spans (filter producer-span?) (map span->topic) (map topic->lifeline))]
+  [{:keys [spans processes]} :- s-jaeger/Trace]
+  (let [services (->> processes (map process->lifeline))
+        topics   (->> spans (filter producer-span?) (map span->topic) (map topic->lifeline))]
     (concat services topics)))
 
 (s/defn execution-boxes :- [s-sequence-diagram/ExecutionBox]
   [trace :- s-jaeger/Trace]
-  (let [server-spans (->> trace :spans (filter server-span?))]
-    (map (span->execution-box trace) server-spans)))
+  (let [server-spans   (->> trace :spans (filter server-span?))
+        consumer-spans (->> trace :spans (filter consumer-span?))]
+    (map (span->execution-box trace) (concat server-spans consumer-spans))))
 
 (s/defn arrows :- [s-sequence-diagram/Arrow]
   [trace :- s-jaeger/Trace]
