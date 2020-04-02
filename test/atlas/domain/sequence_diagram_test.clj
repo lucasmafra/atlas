@@ -2,95 +2,95 @@
   (:require [atlas.domain.sequence-diagram :as nut]
             [clojure.test :refer [is testing]]
             [common-clj.clojure-test-helpers.core :refer [deftest]]
-            [matcher-combinators.matchers :as m]
-            [matcher-combinators.core :refer [match]]))
+            [matcher-combinators.core :refer [match]]
+            [matcher-combinators.matchers :as m]))
 
 (def trace
-  {:trace-id "1"
-   :spans    [{:trace-id       "1"
-               :span-id        "1"
-               :process-id     :p1
-               :operation-name "http.in GET /api/orders/1"
-               :start-time     1500000000000000
-               :duration       1000
-               :references     []
-               :tags           [{:key   "span.kind"
-                                 :type  "string"
-                                 :value "server"}
-                                {:key   "http.method"
-                                 :type  "string"
-                                 :value "GET"}
-                                {:key   "http.url"
-                                 :type  "string"
-                                 :value "/api/orders/1"}]}
+  {:trace-id  "1"
+   :spans     [{:trace-id       "1"
+                :span-id        "1"
+                :process-id     :p1
+                :operation-name "http.in GET /api/orders/1"
+                :start-time     1500000000000000
+                :duration       1000
+                :references     []
+                :tags           [{:key   "span.kind"
+                                  :type  "string"
+                                  :value "server"}
+                                 {:key   "http.method"
+                                  :type  "string"
+                                  :value "GET"}
+                                 {:key   "http.url"
+                                  :type  "string"
+                                  :value "/api/orders/1"}]}
 
-              {:trace-id       "1"
-               :span-id        "2"
-               :process-id     :p1
-               :operation-name "http.out GET /api/orders/1"
-               :start-time     1500000000100000
-               :duration       300
-               :references     [{:ref-type :child-of
-                                 :trace-id "1"
-                                 :span-id  "1"}]
-               :tags           [{:key   "span.kind"
-                                 :type  "string"
-                                 :value "client"}
-                                {:key   "http.method"
-                                 :type  "string"
-                                 :value "GET"}
-                                {:key   "http.url"
-                                 :type  "string"
-                                 :value "/api/orders/1"}]}
+               {:trace-id       "1"
+                :span-id        "2"
+                :process-id     :p1
+                :operation-name "http.out GET /api/orders/1"
+                :start-time     1500000000100000
+                :duration       300
+                :references     [{:ref-type :child-of
+                                  :trace-id "1"
+                                  :span-id  "1"}]
+                :tags           [{:key   "span.kind"
+                                  :type  "string"
+                                  :value "client"}
+                                 {:key   "http.method"
+                                  :type  "string"
+                                  :value "GET"}
+                                 {:key   "http.url"
+                                  :type  "string"
+                                  :value "/api/orders/1"}]}
 
-              {:trace-id       "1"
-               :span-id        "3"
-               :process-id     :p2
-               :operation-name "http.in GET /api/orders/1"
-               :start-time     1500000000200000
-               :duration       100
-               :references     [{:ref-type :child-of
-                                 :trace-id "1"
-                                 :span-id  "2"}]
-               :tags           [{:key   "span.kind"
-                                 :type  "string"
-                                 :value "server"}
-                                {:key   "http.method"
-                                 :type  "string"
-                                 :value "GET"}
-                                {:key   "http.url"
-                                 :type  "string"
-                                 :value "/api/orders/1"}]}
-              {:trace-id       "1"
-               :span-id        "4"
-               :process-id     :p2
-               :operation-name "kafka.out PROCESS_ORDER"
-               :start-time     1500000000250000
-               :duration       50
-               :references     [{:ref-type :child-of
-                                 :trace-id "1"
-                                 :span-id  "3"}]
-               :tags           [{:key   "span.kind"
-                                 :type  "string"
-                                 :value "producer"}
-                                {:key   "message_bus.destination"
-                                 :type  "string"
-                                 :value "PROCESS_ORDER"}]}
-              {:trace-id       "1"
-               :span-id        "5"
-               :process-id     :p3
-               :operation-name "kafka.in PROCESS_ORDER"
-               :start-time     1500000000350000
-               :duration       50
-               :references     [{:ref-type :child-of
-                                 :trace-id "1"
-                                 :span-id  "4"}]
-               :tags           [{:key   "span.kind"
-                                 :type  "string"
-                                 :value "consumer"}
-                                {:key   "message_bus.destination"
-                                 :type  "string"
-                                 :value "PROCESS_ORDER"}]}]
+               {:trace-id       "1"
+                :span-id        "3"
+                :process-id     :p2
+                :operation-name "http.in GET /api/orders/1"
+                :start-time     1500000000200000
+                :duration       100
+                :references     [{:ref-type :child-of
+                                  :trace-id "1"
+                                  :span-id  "2"}]
+                :tags           [{:key   "span.kind"
+                                  :type  "string"
+                                  :value "server"}
+                                 {:key   "http.method"
+                                  :type  "string"
+                                  :value "GET"}
+                                 {:key   "http.url"
+                                  :type  "string"
+                                  :value "/api/orders/1"}]}
+               {:trace-id       "1"
+                :span-id        "4"
+                :process-id     :p2
+                :operation-name "kafka.out PROCESS_ORDER"
+                :start-time     1500000000250000
+                :duration       50
+                :references     [{:ref-type :child-of
+                                  :trace-id "1"
+                                  :span-id  "3"}]
+                :tags           [{:key   "span.kind"
+                                  :type  "string"
+                                  :value "producer"}
+                                 {:key   "message_bus.destination"
+                                  :type  "string"
+                                  :value "PROCESS_ORDER"}]}
+               {:trace-id       "1"
+                :span-id        "5"
+                :process-id     :p3
+                :operation-name "kafka.in PROCESS_ORDER"
+                :start-time     1500000000350000
+                :duration       50
+                :references     [{:ref-type :child-of
+                                  :trace-id "1"
+                                  :span-id  "4"}]
+                :tags           [{:key   "span.kind"
+                                  :type  "string"
+                                  :value "consumer"}
+                                 {:key   "message_bus.destination"
+                                  :type  "string"
+                                  :value "PROCESS_ORDER"}]}]
 
    :processes {:p1 {:service-name "bff"}
                :p2 {:service-name "orders"}

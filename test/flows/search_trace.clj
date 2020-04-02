@@ -63,19 +63,19 @@
                                                     "end=1582769681000"))]
 
   (match? {:status 200
-           :body {"traces" [{"trace_id"    "trace-1"
-                             "total_spans" 2
-                             "duration_ms" 2001
-                             "start_time"  1499999999999
-                             "services"    [{"name"            "orders"
-                                             "number_of_spans" 2}]}
+           :body   {"traces" [{"trace_id"    "trace-1"
+                               "total_spans" 2
+                               "duration_ms" 2001
+                               "start_time"  1499999999999
+                               "services"    [{"name"            "orders"
+                                               "number_of_spans" 2}]}
 
-                            {"trace_id"    "trace-2"
-                             "total_spans" 2
-                             "duration_ms" 2005
-                             "start_time"  1500000000000
-                             "services"    [{"name"            "feed"
-                                             "number_of_spans" 1}
-                                            {"name"            "orders"
-                                             "number_of_spans" 1}]}]}}
+                              {"trace_id"    "trace-2"
+                               "total_spans" 2
+                               "duration_ms" 2005
+                               "start_time"  1500000000000
+                               "services"    [{"name"            "feed"
+                                               "number_of_spans" 1}
+                                              {"name"            "orders"
+                                               "number_of_spans" 1}]}]}}
           response))
