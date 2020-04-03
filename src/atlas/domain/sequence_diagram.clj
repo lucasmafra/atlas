@@ -29,6 +29,14 @@
 
 (defn- producer-span? [{:keys [tags]}] (has-tag? "span.kind" "producer" tags))
 
+(defn- child-of? [{:keys [span-id]}]
+  (fn [{:keys [references]}]
+    (->> references (filter #(= span-id (:span-id %))) first boolean)))
+
+(defn- parent-of? [{:keys [references]}]
+  (fn [{:keys [span-id]}]
+    (->> references (filter #(= span-id (:span-id %))) first boolean)))
+
 (defn- span->service-name [{:keys [process-id]} trace]
   (-> trace :processes process-id :service-name))
 
@@ -39,11 +47,9 @@
      :duration-ms duration
      :lifeline    (span->service-name span trace)}))
 
-(defn- child-of? [{:keys [span-id]}]
-  (fn [{:keys [references]}]
-    (->> references (filter #(= span-id (:span-id %))) first boolean)))
-
 (defn- find-child [span trace] (->> trace :spans (filter (child-of? span)) first))
+
+(defn- find-parent [span trace] (->> trace :spans (filter (parent-of? span)) first))
 
 (defn- span->http-method [{:keys [tags]}] (->> tags (find-tag "http.method") :value))
 
@@ -55,40 +61,43 @@
 
 (defn- topic->lifeline [topic] {:name topic})
 
-(defn- span->arrow-pair [trace]
-  (fn [acc out-span]
-    (if-let [child-span (find-child out-span trace)]
-      (conj acc
-            {:id         (:span-id out-span)
-             :from       (span->service-name out-span trace)
-             :to         (span->service-name child-span trace)
-             :start-time (microseconds->epoch (:start-time out-span))
-             :prefix     (span->http-method out-span)
-             :label      (span->http-url out-span)}
-            {:id         (:span-id child-span)
-             :from       (span->service-name child-span trace)
-             :to         (span->service-name out-span trace)
-             :start-time (span->end-time out-span)
-             :label      "response"})
-      acc)))
+(defn- client-span->arrow [trace]
+  (fn [client-span]
+    (if-let [server-span (find-child client-span trace)]
+      {:id         (:span-id client-span)
+       :from       (span->service-name client-span trace)
+       :to         (span->service-name server-span trace)
+       :start-time (microseconds->epoch (:start-time client-span))
+       :prefix     (span->http-method client-span)
+       :label      (span->http-url client-span)})))
+
+(defn- server-span->arrow [trace]
+  (fn [server-span]
+    (if-let [client-span (find-parent server-span trace)]
+      {:id         (:span-id server-span)
+       :from       (span->service-name server-span trace)
+       :to         (span->service-name client-span trace)
+       :start-time (span->end-time client-span)
+       :label      "response"})))
 
 (defn- producer-span->arrow [trace]
-  (fn [acc producer-span]
-    (conj acc
-          {:id         (:span-id producer-span)
-           :from       (span->service-name producer-span trace)
-           :to         (span->topic producer-span)
-           :start-time (microseconds->epoch (:start-time producer-span))
-           :label      "produce"})))
+  (fn [producer-span]
+    {:id         (:span-id producer-span)
+     :from       (span->service-name producer-span trace)
+     :to         (span->topic producer-span)
+     :start-time (microseconds->epoch (:start-time producer-span))
+     :label      "produce"}))
 
 (defn- consumer-span->arrow [trace]
-  (fn [acc consumer-span]
-    (conj acc
-          {:id         (:span-id consumer-span)
-           :from       (span->topic consumer-span)
-           :to         (span->service-name consumer-span trace)
-           :start-time (microseconds->epoch (:start-time consumer-span))
-           :label      "consume"})))
+  (fn [consumer-span]
+    {:id         (:span-id consumer-span)
+     :from       (span->topic consumer-span)
+     :to         (span->service-name consumer-span trace)
+     :start-time (microseconds->epoch (:start-time consumer-span))
+     :label      "consume"}))
+
+(defn- build-arrows [{:keys [spans] :as trace}]
+  (fn [[matcher mapper]] (->> spans (filter matcher) (map (mapper trace)) (remove nil?))))
 
 (s/defn start-time :- cs/EpochMillis
   [trace :- s-jaeger/Trace]
@@ -114,19 +123,9 @@
 
 (s/defn arrows :- [s-sequence-diagram/Arrow]
   [trace :- s-jaeger/Trace]
-  (let [client-span-arrows (->> trace
-                                :spans
-                                (filter client-span?)
-                                (reduce (span->arrow-pair trace) []))
-        producer-arrows    (->> trace
-                                :spans
-                                (filter producer-span?)
-                                (reduce (producer-span->arrow trace) []))
-        consumer-arrows    (->> trace
-                                :spans
-                                (filter consumer-span?)
-                                (reduce (consumer-span->arrow trace) []))]
-    (concat
-     client-span-arrows
-     producer-arrows
-     consumer-arrows)))
+  (->> [[client-span? client-span->arrow]
+        [server-span? server-span->arrow]
+        [producer-span? producer-span->arrow]
+        [consumer-span? consumer-span->arrow]]
+       (map (build-arrows trace))
+       (apply concat)))

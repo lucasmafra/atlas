@@ -2,8 +2,8 @@
   (:require [atlas.domain.sequence-diagram :as nut]
             [clojure.test :refer [is testing]]
             [common-clj.clojure-test-helpers.core :refer [deftest]]
-            [matcher-combinators.core :refer [match]]
-            [matcher-combinators.matchers :as m]))
+            [matcher-combinators.matchers :as m]
+            [matcher-combinators.test :refer [match?]]))
 
 (def trace
   {:trace-id  "1"
@@ -108,9 +108,10 @@
 
 (deftest lifelines
   (testing "builds lifelines from trace"
-    (is (match (m/in-any-order [{:name "bff"}
-                                {:name "orders"}
-                                {:name "PROCESS_ORDER"}]) (nut/lifelines trace)))))
+    (is (match? (m/in-any-order [{:name "bff"}
+                                 {:name "orders"}
+                                 {:name "PROCESS_ORDER"}])
+                (nut/lifelines trace)))))
 
 (deftest execution-boxes
   (testing "builds execution boxes from trace"
