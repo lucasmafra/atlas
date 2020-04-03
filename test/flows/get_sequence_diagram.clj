@@ -103,9 +103,12 @@
     (match? {:status 200
              :body   {"sequence_diagram" {"start_time"      1500000000000
                                           "duration_ms"     1000
-                                          "lifelines"       (m/in-any-order [{"name" "bff"}
-                                                                             {"name" "orders"}
-                                                                             {"name" "PROCESS_ORDER"}])
+                                          "lifelines"       (m/in-any-order [{"name" "bff"
+                                                                              "kind" "service"}
+                                                                             {"name" "orders"
+                                                                              "kind" "service"}
+                                                                             {"name" "PROCESS_ORDER"
+                                                                              "kind" "topic"}])
                                           "execution_boxes" [{"id"          "1"
                                                               "start_time"  1500000000000
                                                               "duration_ms" 1000

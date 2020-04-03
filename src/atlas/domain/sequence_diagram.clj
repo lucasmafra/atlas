@@ -55,11 +55,11 @@
 
 (defn- span->http-url [{:keys [tags]}] (->> tags (find-tag "http.url") :value))
 
-(defn- process->lifeline [[_ {:keys [service-name]}]] {:name service-name})
+(defn- process->lifeline [[_ {:keys [service-name]}]] {:name service-name :kind :service})
 
 (defn- span->topic [{:keys [tags]}] (->> tags (find-tag "message_bus.destination") :value))
 
-(defn- topic->lifeline [topic] {:name topic})
+(defn- topic->lifeline [topic] {:name topic :kind :topic})
 
 (defn- client-span->arrow [trace]
   (fn [client-span]

@@ -3,7 +3,8 @@
             [schema.core :as s]))
 
 (def Lifeline
-  {:name s/Str})
+  {:name s/Str
+   :kind (s/enum :service :topic)})
 
 (def ExecutionBox
   {:id          s/Str

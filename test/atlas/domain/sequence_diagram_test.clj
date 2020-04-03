@@ -108,9 +108,12 @@
 
 (deftest lifelines
   (testing "builds lifelines from trace"
-    (is (match? (m/in-any-order [{:name "bff"}
-                                 {:name "orders"}
-                                 {:name "PROCESS_ORDER"}])
+    (is (match? (m/in-any-order [{:name "bff"
+                                  :kind :service}
+                                 {:name "orders"
+                                  :kind :service}
+                                 {:name "PROCESS_ORDER"
+                                  :kind :topic}])
                 (nut/lifelines trace)))))
 
 (deftest execution-boxes
