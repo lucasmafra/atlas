@@ -24,4 +24,5 @@
                                  [lein-nsorg "0.3.0"]
                                  [clj-kondo "2020.02.28-1"]]
                        :aliases {"lint-fix" ["do" "nsorg" "--replace," "kibit" "--replace," "cljfmt" "fix"]
-                                 "clj-kondo" ["run" "-m" "clj-kondo.main"]}}})
+                                 "clj-kondo" ["run" "-m" "clj-kondo.main"]
+                                 "run-dev" ["trampoline" "run" "-m" "dev/-main"]}}})
