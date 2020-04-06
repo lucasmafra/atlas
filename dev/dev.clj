@@ -15,3 +15,5 @@
           :config (imc/new-config config :dev))))
 
 (set-init (constantly dev-system))
+
+(def -main (partial component/start dev-system))
