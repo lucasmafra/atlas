@@ -36,3 +36,5 @@ repl-port
 # Builds
 out/
 build/
+/.idea/
+/atlas.iml

@@ -55,15 +55,15 @@
 
 (defn- span->http-url [{:keys [tags]}] (->> tags (find-tag "http.url") :value))
 
-(defn- process->lifeline [[_ {:keys [service-name]}]] {:name service-name})
+(defn- process->lifeline [[_ {:keys [service-name]}]] {:name service-name :kind :service})
 
 (defn- span->topic [{:keys [tags]}] (->> tags (find-tag "message_bus.destination") :value))
 
-(defn- topic->lifeline [topic] {:name topic})
+(defn- topic->lifeline [topic] {:name topic :kind :topic})
 
 (defn- client-span->arrow [trace]
   (fn [client-span]
-    (if-let [server-span (find-child client-span trace)]
+    (when-let [server-span (find-child client-span trace)]
       {:id         (:span-id client-span)
        :from       (span->service-name client-span trace)
        :to         (span->service-name server-span trace)
@@ -73,7 +73,7 @@
 
 (defn- server-span->arrow [trace]
   (fn [server-span]
-    (if-let [client-span (find-parent server-span trace)]
+    (when-let [client-span (find-parent server-span trace)]
       {:id         (:span-id server-span)
        :from       (span->service-name server-span trace)
        :to         (span->service-name client-span trace)
