@@ -12,7 +12,7 @@
                 :process-id     :p1
                 :operation-name "http.in GET /api/orders/1"
                 :start-time     1500000000000000
-                :duration       1000
+                :duration       1000000
                 :references     []
                 :tags           [{:key   "span.kind"
                                   :type  "string"
@@ -29,7 +29,7 @@
                 :process-id     :p1
                 :operation-name "http.out GET /api/orders/1"
                 :start-time     1500000000100000
-                :duration       300
+                :duration       300000
                 :references     [{:ref-type :child-of
                                   :trace-id "1"
                                   :span-id  "1"}]
@@ -48,7 +48,7 @@
                 :process-id     :p2
                 :operation-name "http.in GET /api/orders/1"
                 :start-time     1500000000200000
-                :duration       100
+                :duration       100000
                 :references     [{:ref-type :child-of
                                   :trace-id "1"
                                   :span-id  "2"}]
@@ -66,7 +66,7 @@
                 :process-id     :p2
                 :operation-name "kafka.out PROCESS_ORDER"
                 :start-time     1500000000250000
-                :duration       50
+                :duration       50000
                 :references     [{:ref-type :child-of
                                   :trace-id "1"
                                   :span-id  "3"}]
@@ -81,7 +81,7 @@
                 :process-id     :p3
                 :operation-name "kafka.in PROCESS_ORDER"
                 :start-time     1500000000350000
-                :duration       50
+                :duration       50000
                 :references     [{:ref-type :child-of
                                   :trace-id "1"
                                   :span-id  "4"}]

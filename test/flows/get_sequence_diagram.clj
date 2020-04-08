@@ -12,7 +12,7 @@
                           "processID"     "p1"
                           "operationName" "http.in GET /api/orders/1"
                           "startTime"     1500000000000000
-                          "duration"      1000
+                          "duration"      1000000
                           "references"    []
                           "tags"          [{"key"   "span.kind"
                                             "type"  "string"
@@ -29,7 +29,7 @@
                           "processID"     "p1"
                           "operationName" "http.out GET /api/orders/1"
                           "startTime"     1500000000100000
-                          "duration"      300
+                          "duration"      300000
                           "references"    [{"ref-type" "CHILD_OF"
                                             "traceID"  "1"
                                             "spanID"   "1"}]
@@ -48,7 +48,7 @@
                           "processID"     "p2"
                           "operationName" "http.in GET /api/orders/1"
                           "startTime"     1500000000200000
-                          "duration"      100
+                          "duration"      100000
                           "references"    [{"ref-type" "CHILD_OF"
                                             "traceID"  "1"
                                             "spanID"   "2"}]
@@ -66,7 +66,7 @@
                           "processID"     "p2"
                           "operationName" "kafka.out PROCESS_ORDER"
                           "startTime"     1500000000250000
-                          "duration"      50
+                          "duration"      50000
                           "references"    [{"ref-type" "CHILD_OF"
                                             "traceID"  "1"
                                             "spanID"   "3"}]
@@ -81,7 +81,7 @@
                           "processID"     "p2"
                           "operationName" "kafka.in PROCESS_ORDER"
                           "startTime"     1500000000350000
-                          "duration"      50
+                          "duration"      50000
                           "references"    [{"ref-type" "CHILD_OF"
                                             "traceID"  "1"
                                             "spanID"   "4"}]

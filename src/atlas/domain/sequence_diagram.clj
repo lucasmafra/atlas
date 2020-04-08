@@ -9,7 +9,7 @@
 
 (defn- span->end-time [{:keys [start-time duration]}]
   (let [start-epoch (microseconds->epoch start-time)]
-    (time/plus start-epoch (time/millis duration))))
+    (time/plus start-epoch (time/micros duration))))
 
 (defn- match-tag?
   ([k] #(= k (:key %)))
@@ -44,7 +44,7 @@
   (fn [{:keys [span-id start-time duration] :as span}]
     {:id          span-id
      :start-time  (microseconds->epoch start-time)
-     :duration-ms duration
+     :duration-ms (/ duration 1000)
      :lifeline    (span->service-name span trace)}))
 
 (defn- find-child [span trace] (->> trace :spans (filter (child-of? span)) first))
