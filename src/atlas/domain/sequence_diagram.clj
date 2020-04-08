@@ -57,7 +57,7 @@
 
 (defn- process->lifeline [[_ {:keys [service-name]}]] {:name service-name :kind :service})
 
-(defn- span->topic [{:keys [tags]}] (->> tags (find-tag "message_bus.destination") :value))
+(defn- span->topic [{:keys [tags]}] (->> tags (find-tag "topic") :value))
 
 (defn- topic->lifeline [topic] {:name topic :kind :topic})
 
@@ -68,7 +68,7 @@
        :from       (span->service-name client-span trace)
        :to         (span->service-name server-span trace)
        :start-time (microseconds->epoch (:start-time client-span))
-       :prefix     (span->http-method client-span)
+       :prefix     (span->http-method server-span)
        :label      (span->http-url client-span)})))
 
 (defn- server-span->arrow [trace]
@@ -77,7 +77,7 @@
       {:id         (:span-id server-span)
        :from       (span->service-name server-span trace)
        :to         (span->service-name client-span trace)
-       :start-time (span->end-time client-span)
+       :start-time (span->end-time server-span)
        :label      "response"})))
 
 (defn- producer-span->arrow [trace]
