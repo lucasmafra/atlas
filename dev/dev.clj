@@ -1,18 +1,34 @@
 (ns dev
-  (:require [atlas.system :refer [system]]
+  (:require [atlas.ports.http-client :refer [client-overrides client-routes]]
+            [atlas.system :refer [system]]
+            [clojure.java.io :as io]
             [com.stuartsierra.component :as component]
-            [com.stuartsierra.component.repl :refer [reset set-init start stop]]
-            [common-clj.config.in-memory-config :as imc]))
+            [com.stuartsierra.component.repl :refer [reset set-init]]
+            [common-clj.config.in-memory-config :as imc]
+            [common-clj.http-client.http-client :as hc]
+            [common-clj.http-client.interceptors.with-mock-calls :as i-hc-mock]))
 
 (def config
   {:app-name    :atlas
    :http-port   9000
    :known-hosts {:jaeger "https://prod-jaeger.nubank.com.br"}})
 
+(def mock-endpoints
+  {#"https://prod-jaeger.nubank.com.br/api/traces/.*$"
+   (fn [request] {:status 200
+                  :body (-> request :path-params :id (str ".json") io/resource slurp)})})
+
+(def dev-client-overrides
+  (update client-overrides :extra-interceptors conj (i-hc-mock/with-mock-calls mock-endpoints)))
+
 (def dev-system
   (merge system
          (component/system-map
-          :config (imc/new-config config :dev))))
+          :config (imc/new-config config :dev)
+
+          :http-client (component/using
+                        (hc/new-http-client client-routes dev-client-overrides)
+                        [:config]))))
 
 (set-init (constantly dev-system))
 
