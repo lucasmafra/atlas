@@ -1,12 +1,14 @@
 (ns dev
   (:require [atlas.ports.http-client :refer [client-overrides client-routes]]
+            [atlas.ports.http-server :refer [server-overrides server-routes]]
             [atlas.system :refer [system]]
             [clojure.java.io :as io]
             [com.stuartsierra.component :as component]
             [com.stuartsierra.component.repl :refer [reset set-init]]
             [common-clj.config.in-memory-config :as imc]
             [common-clj.http-client.http-client :as hc]
-            [common-clj.http-client.interceptors.with-mock-calls :as i-hc-mock]))
+            [common-clj.http-client.interceptors.with-mock-calls :as i-hc-mock]
+            [common-clj.http-server.http-server :as hs]))
 
 (def config
   {:app-name    :atlas
@@ -28,8 +30,15 @@
 
           :http-client (component/using
                         (hc/new-http-client client-routes dev-client-overrides)
-                        [:config]))))
+                        [:config])
+
+          :http-server (component/using
+                        (hs/new-http-server server-routes server-overrides)
+                        [:config :http-client]))))
 
 (set-init (constantly dev-system))
 
 (def -main (partial component/start dev-system))
+
+(comment
+  (reset))
