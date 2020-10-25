@@ -74,9 +74,9 @@
                         (-> trace
                             generate-string
                             (deserializer/default-deserialize-fn
-                             {"traceID"   :trace-id
-                              "spanID"    :span-id
-                              "processID" :process-id})))
+                              {"traceID"   :trace-id
+                               "spanID"    :span-id
+                               "processID" :process-id})))
                        (ok {}))}})
 
 ;; --- SERVER OVERRIDES ---

@@ -18,7 +18,7 @@
 (def mock-endpoints
   {#"https://prod-jaeger.nubank.com.br/api/traces/.*$"
    (fn [request] {:status 200
-                  :body (-> request :path-params :id (str ".json") io/resource slurp)})})
+                  :body   (-> request :path-params :id (str ".json") io/resource slurp)})})
 
 (def dev-client-overrides
   (update client-overrides :extra-interceptors conj (i-hc-mock/with-mock-calls mock-endpoints)))

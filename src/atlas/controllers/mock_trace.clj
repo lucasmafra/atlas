@@ -24,28 +24,28 @@
   (cond-> tracer
     true                      (.buildSpan operation-name)
     true                      (.withStartTimestamp start-time)
-    (not (empty? references)) (.asChildOf (-> references first :span-id spans-map))
-    (not (empty? tags))       (add-tags tags)
+    (seq references) (.asChildOf (-> references first :span-id spans-map))
+    (seq tags)       (add-tags tags)
     true                      .start))
 
 (defn- mock-span [span trace spans-map]
-  (let [pid            (-> span :process-id)
-        span-id        (-> span :span-id)
+  (let [pid            (:process-id span)
+        span-id        (:span-id span)
         processes      (-> trace :data first :processes)
-        operation-name (-> span :operation-name)
-        references     (-> span :references)
-        tags           (-> span :tags)
-        start-time     (-> span :start-time)
-        duration       (-> span :duration)
+        operation-name (:operation-name span)
+        references     (:references span)
+        tags           (:tags span)
+        start-time     (:start-time span)
+        duration       (:duration span)
         end-time       (+ start-time duration)
         service-name   (-> pid keyword processes :service-name)
         tracer         (->tracer service-name)
         started-span   (start-span tracer operation-name start-time references spans-map tags)
-        scope          (-> tracer (.activateSpan started-span))]
-      (.finish started-span end-time)
-      (.close scope)
-      (.close tracer)
-      (assoc spans-map span-id started-span)))
+        scope          (.activateSpan tracer started-span)]
+    (.finish started-span end-time)
+    (.close scope)
+    (.close tracer)
+    (assoc spans-map span-id started-span)))
 
 (s/defn mock-trace [trace :- s-jaeger/TraceResponse]
   (let [spans (-> trace :data first :spans)]
