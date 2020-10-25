@@ -1,5 +1,6 @@
 (ns atlas.ports.http-server
-  (:require [atlas.controllers.operation :as c-operation]
+  (:require [atlas.controllers.mock-trace :as c-mock-trace]
+            [atlas.controllers.operation :as c-operation]
             [atlas.controllers.sequence-diagram :as c-sequence-diagram]
             [atlas.controllers.service :as c-service]
             [atlas.controllers.trace-graph :as c-trace-graph]
@@ -9,7 +10,9 @@
             [atlas.schemata.service :as s-service]
             [atlas.schemata.trace-graph :as s-trace-graph]
             [atlas.schemata.trace-search :as s-trace-search]
-            [common-clj.coercion :refer [int-matcher]]
+            [cheshire.core :refer [generate-string]]
+            [common-clj.coercion :as coercion :refer [int-matcher]]
+            [common-clj.http-client.interceptors.json-deserializer :as deserializer]
             [common-clj.http-server.interceptors.helpers :refer [ok]]
             [schema.core :as s]))
 
@@ -59,7 +62,22 @@
     :path-params-schema {:id s/Str}
     :response-schema    s-sequence-diagram/SequenceDiagramResponse
     :handler            (fn [{{:keys [id]} :path-params} components]
-                          (ok {:sequence-diagram (c-sequence-diagram/get-sequence-diagram id components)}))}})
+                          (ok {:sequence-diagram (c-sequence-diagram/get-sequence-diagram id components)}))}
+
+   :route/mock-trace
+   {:path            "/api/admin/mock-trace"
+    :method          :post
+    :request-schema  s/Any
+    :response-schema {}
+    :handler         (fn [{trace :body} components]
+                       (c-mock-trace/mock-trace
+                        (-> trace
+                            generate-string
+                            (deserializer/default-deserialize-fn
+                             {"traceID"   :trace-id
+                              "spanID"    :span-id
+                              "processID" :process-id})))
+                       (ok {}))}})
 
 ;; --- SERVER OVERRIDES ---
 (def server-overrides {})
