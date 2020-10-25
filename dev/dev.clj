@@ -13,10 +13,10 @@
 (def config
   {:app-name    :atlas
    :http-port   9000
-   :known-hosts {:jaeger "https://prod-jaeger.nubank.com.br"}})
+   :known-hosts {:jaeger "http://localhost:16686"}})
 
 (def mock-endpoints
-  {#"https://prod-jaeger.nubank.com.br/api/traces/.*$"
+  {#"http://localhost:16686/api/traces/.*$"
    (fn [request] {:status 200
                   :body   (-> request :path-params :id (str ".json") io/resource slurp)})})
 

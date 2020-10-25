@@ -49,7 +49,4 @@
 
 (s/defn mock-trace [trace :- s-jaeger/TraceResponse]
   (let [spans (-> trace :data first :spans)]
-    (reduce
-     #(mock-span %2 trace %1)
-     {}
-     spans)))
+    (reduce #(mock-span %2 trace %1) {} spans)))
