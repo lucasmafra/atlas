@@ -108,28 +108,30 @@
 
 (deftest lifelines
   (testing "builds lifelines from trace"
-    (is (match? (m/in-any-order [{:name "bff"
-                                  :kind :service}
-                                 {:name "orders"
-                                  :kind :service}
-                                 {:name "PROCESS_ORDER"
-                                  :kind :topic}])
+    (is (match? [{:name "bff"
+                  :kind :service}
+                 {:name "orders"
+                  :kind :service}
+                 {:name "PROCESS_ORDER"
+                  :kind :topic}]
                 (nut/lifelines trace)))))
 
 (deftest execution-boxes
   (testing "builds execution boxes from trace"
-    (is (= [{:id          "1"
-             :start-time  #epoch 1500000000000
-             :duration-ms 1000
-             :lifeline    "bff"}
-            {:id          "3"
-             :start-time  #epoch 1500000000200
-             :duration-ms 100
-             :lifeline    "orders"}
-            {:id          "5"
-             :start-time  #epoch 1500000000350
-             :duration-ms 50
-             :lifeline    "orders"}]
+    (is (match?
+         (m/in-any-order
+          [{:id          "1"
+            :duration-ms 1000
+            :lifeline    "bff"}
+           {:id          "3"
+            :duration-ms 100
+            :lifeline    "orders"}
+           {:id          "5"
+            :duration-ms 50
+            :lifeline    "orders"}
+           {:id          "PROCESS_ORDER1500000000250000"
+            :duration-ms 100
+            :lifeline    "PROCESS_ORDER"}])
            (nut/execution-boxes trace)))))
 
 (deftest arrows
