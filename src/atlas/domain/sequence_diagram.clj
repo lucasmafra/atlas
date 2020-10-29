@@ -51,6 +51,8 @@
   (prn x)
   x)
 
+(defn- span->topic [{:keys [tags]}] (->> tags (find-tag "message_bus.destination") :value))
+
 (defn- ->topic-execution-boxes [spans]
   (let [spans-by-topic (->> spans
                             (filter (some-fn consumer-span? producer-span?))
@@ -80,8 +82,6 @@
               {:name       (span->service-name span trace)
                :kind       :service
                :start-time (:start-time span)}))))
-
-(defn- span->topic [{:keys [tags]}] (->> tags (find-tag "message_bus.destination") :value))
 
 (defn- ->topic-lifelines [spans]
   (->> spans
