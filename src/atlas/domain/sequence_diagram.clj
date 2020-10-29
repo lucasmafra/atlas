@@ -51,6 +51,8 @@
   (prn x)
   x)
 
+(defn- span->topic [{:keys [tags]}] (->> tags (find-tag "message_bus.destination") :value))
+
 (defn- ->topic-execution-boxes [spans]
   (let [spans-by-topic (->> spans
                             (filter (some-fn consumer-span? producer-span?))
@@ -75,20 +77,14 @@
 (defn- span->http-url [{:keys [tags]}] (->> tags (find-tag "http.url") :value))
 
 (defn- ->service-lifelines [spans trace]
-  (->> spans
-       (map (fn [span]
-              {:name       (span->service-name span trace)
-               :kind       :service
-               :start-time (:start-time span)}))))
-
-(defn- span->topic [{:keys [tags]}] (->> tags (find-tag "message_bus.destination") :value))
+  (map (fn [span] {:name (span->service-name span trace) :start-time (:start-time span) :kind :service}) spans))
 
 (defn- ->topic-lifelines [spans]
   (->> spans
        (filter producer-span?)
        (map (fn [span]
-              {:name (span->topic span)
-               :kind :topic
+              {:name       (span->topic span)
+               :kind       :topic
                :start-time (:start-time span)}))))
 
 (defn- client-span->arrow [trace]
@@ -140,7 +136,7 @@
     (.toMillis (time/duration start-time end-time))))
 
 (s/defn lifelines :- [s-sequence-diagram/Lifeline]
-  [{:keys [spans processes] :as trace} :- s-jaeger/Trace]
+  [{:keys [spans] :as trace} :- s-jaeger/Trace]
   (let [services (->service-lifelines spans trace)
         topics   (->topic-lifelines spans)]
     (->> services (concat topics)

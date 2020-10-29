@@ -132,7 +132,7 @@
            {:id          "PROCESS_ORDER1500000000250000"
             :duration-ms 100
             :lifeline    "PROCESS_ORDER"}])
-           (nut/execution-boxes trace)))))
+         (nut/execution-boxes trace)))))
 
 (deftest arrows
   (testing "builds arrows from trace"
