@@ -77,18 +77,14 @@
 (defn- span->http-url [{:keys [tags]}] (->> tags (find-tag "http.url") :value))
 
 (defn- ->service-lifelines [spans trace]
-  (->> spans
-       (map (fn [span]
-              {:name       (span->service-name span trace)
-               :kind       :service
-               :start-time (:start-time span)}))))
+  (map (fn [span] {:name (span->service-name span trace) :start-time (:start-time span) :kind :service}) spans))
 
 (defn- ->topic-lifelines [spans]
   (->> spans
        (filter producer-span?)
        (map (fn [span]
-              {:name (span->topic span)
-               :kind :topic
+              {:name       (span->topic span)
+               :kind       :topic
                :start-time (:start-time span)}))))
 
 (defn- client-span->arrow [trace]

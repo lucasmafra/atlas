@@ -1,6 +1,5 @@
 (ns atlas.controllers.mock-trace
   (:require [atlas.schemata.jaeger :as s-jaeger]
-            [cheshire.core :refer [generate-string]]
             [schema.core :as s])
   (:import [io.jaegertracing Configuration Configuration$SamplerConfiguration]))
 
