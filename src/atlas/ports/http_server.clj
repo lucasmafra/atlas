@@ -69,7 +69,7 @@
     :method          :post
     :request-schema  s/Any
     :response-schema {}
-    :handler         (fn [{trace :body} components]
+    :handler         (fn [{trace :body}]
                        (c-mock-trace/mock-trace
                         (-> trace
                             generate-string

@@ -136,7 +136,7 @@
     (.toMillis (time/duration start-time end-time))))
 
 (s/defn lifelines :- [s-sequence-diagram/Lifeline]
-  [{:keys [spans processes] :as trace} :- s-jaeger/Trace]
+  [{:keys [spans] :as trace} :- s-jaeger/Trace]
   (let [services (->service-lifelines spans trace)
         topics   (->topic-lifelines spans)]
     (->> services (concat topics)
