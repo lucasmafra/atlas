@@ -81,7 +81,7 @@
                 :process-id     :p3
                 :operation-name "kafka.in PROCESS_ORDER"
                 :start-time     1500000000350000
-                :duration       50000
+                :duration       50100
                 :references     [{:ref-type :child-of
                                   :trace-id "1"
                                   :span-id  "4"}]
@@ -127,7 +127,7 @@
             :duration-ms 100
             :lifeline    "orders"}
            {:id          "5"
-            :duration-ms 50
+            :duration-ms 501/10
             :lifeline    "orders"}
            {:id          "PROCESS_ORDER1500000000250000"
             :duration-ms 100

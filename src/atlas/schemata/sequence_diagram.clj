@@ -9,7 +9,7 @@
 (def ExecutionBox
   {:id          s/Str
    :start-time  cs/EpochMillis
-   :duration-ms cs/PosInt
+   :duration-ms s/Num
    :lifeline    s/Str})
 
 (def Arrow
