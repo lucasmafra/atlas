@@ -47,6 +47,27 @@
      :duration-ms (/ duration 1000)
      :lifeline    (span->service-name span trace)}))
 
+(defn tap [x]
+  (prn x)
+  x)
+
+(defn- span->topic [{:keys [tags]}] (->> tags (find-tag "message_bus.destination") :value))
+
+(defn- ->topic-execution-boxes [spans]
+  (let [spans-by-topic (->> spans
+                            (filter (some-fn consumer-span? producer-span?))
+                            (group-by span->topic))]
+    (map
+     (fn [[topic spans]]
+       (let [start-time (->> spans (sort-by :start-time) first :start-time)
+             end-time   (->> spans (sort-by :start-time) last :start-time)
+             duration   (- end-time start-time)]
+         {:id          (str topic start-time)
+          :start-time  (microseconds->epoch start-time)
+          :duration-ms (/ duration 1000)
+          :lifeline    topic}))
+     spans-by-topic)))
+
 (defn- find-child [span trace] (->> trace :spans (filter (child-of? span)) first))
 
 (defn- find-parent [span trace] (->> trace :spans (filter (parent-of? span)) first))
@@ -55,11 +76,16 @@
 
 (defn- span->http-url [{:keys [tags]}] (->> tags (find-tag "http.url") :value))
 
-(defn- process->lifeline [[_ {:keys [service-name]}]] {:name service-name :kind :service})
+(defn- ->service-lifelines [spans trace]
+  (map (fn [span] {:name (span->service-name span trace) :start-time (:start-time span) :kind :service}) spans))
 
-(defn- span->topic [{:keys [tags]}] (->> tags (find-tag "message_bus.destination") :value))
-
-(defn- topic->lifeline [topic] {:name topic :kind :topic})
+(defn- ->topic-lifelines [spans]
+  (->> spans
+       (filter producer-span?)
+       (map (fn [span]
+              {:name       (span->topic span)
+               :kind       :topic
+               :start-time (:start-time span)}))))
 
 (defn- client-span->arrow [trace]
   (fn [client-span]
@@ -110,16 +136,23 @@
     (.toMillis (time/duration start-time end-time))))
 
 (s/defn lifelines :- [s-sequence-diagram/Lifeline]
-  [{:keys [spans processes]} :- s-jaeger/Trace]
-  (let [services (map process->lifeline processes)
-        topics   (->> spans (filter producer-span?) (map span->topic) (map topic->lifeline))]
-    (->> services (concat topics) set vec)))
+  [{:keys [spans] :as trace} :- s-jaeger/Trace]
+  (let [services (->service-lifelines spans trace)
+        topics   (->topic-lifelines spans)]
+    (->> services (concat topics)
+         (sort-by :start-time)
+         (map #(select-keys % [:name :kind]))
+         distinct)))
 
 (s/defn execution-boxes :- [s-sequence-diagram/ExecutionBox]
   [trace :- s-jaeger/Trace]
-  (let [server-spans   (->> trace :spans (filter server-span?))
-        consumer-spans (->> trace :spans (filter consumer-span?))]
-    (map (span->execution-box trace) (concat server-spans consumer-spans))))
+  (let [server-spans          (->> trace :spans (filter server-span?))
+        consumer-spans        (->> trace :spans (filter consumer-span?))
+        topic-execution-boxes (->topic-execution-boxes (:spans trace))]
+    (->> consumer-spans
+         (concat server-spans)
+         (map (span->execution-box trace))
+         (concat topic-execution-boxes))))
 
 (s/defn arrows :- [s-sequence-diagram/Arrow]
   [trace :- s-jaeger/Trace]

@@ -7,7 +7,8 @@
                  [clojure.java-time "0.3.2"]
                  [lucasmafra/common-clj "1.5.3"]
                  [com.stuartsierra/component "0.4.0"]
-                 [prismatic/schema "1.1.11"]]
+                 [prismatic/schema "1.1.11"]
+                 [io.jaegertracing/jaeger-client "1.4.0"]]
 
   :resource-paths ["config", "resources"]
   :main ^:skip-aot atlas.system
