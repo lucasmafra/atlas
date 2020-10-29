@@ -109,7 +109,11 @@
                                                                               "kind" "service"}
                                                                              {"name" "PROCESS_ORDER"
                                                                               "kind" "topic"}])
-                                          "execution_boxes" [{"id"          "1"
+                                          "execution_boxes" [{"id"          "PROCESS_ORDER1500000000250000"
+                                                              "start_time"  1500000000250
+                                                              "duration_ms" 100
+                                                              "lifeline"    "PROCESS_ORDER"}
+                                                             {"id"          "1"
                                                               "start_time"  1500000000000
                                                               "duration_ms" 1000
                                                               "lifeline"    "bff"}
@@ -142,4 +146,4 @@
                                                               "to"         "orders"
                                                               "start_time" 1500000000350
                                                               "label"      "consume"}]}}}
-            response)))
+      response)))
