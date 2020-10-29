@@ -127,7 +127,7 @@
             :duration-ms 100
             :lifeline    "orders"}
            {:id          "5"
-            :duration-ms 50
+            :duration-ms 501/10
             :lifeline    "orders"}
            {:id          "PROCESS_ORDER1500000000250000"
             :duration-ms 100
