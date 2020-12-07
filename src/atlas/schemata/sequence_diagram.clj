@@ -8,17 +8,16 @@
    :kind  (s/enum :service :topic)
    :time  cs/EpochMillis})
 
-(def ExecutionBox
-  {:id          s/Str
-   :start-time  cs/EpochMillis
-   :duration-ms s/Num
-   :lifeline    s/Str})
-
 (def Node
   {:id       s/Str
    :time     cs/EpochMillis
    :meta     {s/Keyword s/Str}
    :lifeline s/Str})
+
+(def ExecutionBox
+  {:id   s/Str
+   :from Node
+   :to   Node})
 
 (def Arrow
   {:id   s/Str

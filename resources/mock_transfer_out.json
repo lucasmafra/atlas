@@ -654,7 +654,7 @@
                                 }
                               ]
                             }, {
-                              "timestamp": 1500000002000003,
+                              "timestamp": 1500000001800013,
                               "fields": [
                                 {
                                   "key": "log",
@@ -671,7 +671,7 @@
                                 }
                               ]
                             },{
-                              "timestamp": 1500000002000004,
+                              "timestamp": 1500000001800014,
                               "fields": [
                                 {
                                   "key": "log",
@@ -688,7 +688,7 @@
                                 }
                               ]
                             }, {
-                              "timestamp": 1500000002000005,
+                              "timestamp": 1500000001800015,
                               "fields": [
                                 {
                                   "key": "log",
@@ -705,7 +705,7 @@
                                 }
                               ]
                             }, {
-                              "timestamp": 1500000002000006,
+                              "timestamp": 1500000001800016,
                               "fields": [
                                 {
                                   "key": "log",
@@ -798,7 +798,7 @@
                           "spanID":        "9",
                           "processID":     "p5",
                           "operationName": "kafka.out produce",
-                          "startTime":     1500000002900000,
+                          "startTime":     1500000002850000,
                           "duration":      100000,
                           "references":    [{"ref-type": "CHILD_OF",
                                              "traceID":  "1",

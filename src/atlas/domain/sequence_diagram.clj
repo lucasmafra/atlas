@@ -121,6 +121,15 @@
                 :time      (str (microseconds->epoch start-time))}
      :lifeline (span->topic span)}))
 
+(defn- consumer-span->message-handled-node [trace]
+  (fn [{:keys [span-id start-time duration] :as span}]
+    {:id       (str "message-handled-" span-id)
+     :time     (span->end-time span)
+     :meta     {:log       "in-message"
+                :log-level "INFO"
+                :time      (str (span->end-time span))}
+     :lifeline (span->service-name span trace)}))
+
 (defn- ->topic-execution-boxes [spans]
   (let [spans-by-topic (->> spans
                             (filter (some-fn consumer-span? producer-span?))
@@ -223,30 +232,45 @@
          (sort-by :time)
          distinct)))
 
+(defn- server-span->execution-box [trace]
+  (fn [server-span]
+    (let [from ((span->node trace) server-span)
+          to   ((server-span->in-response-node trace) server-span)]
+      {:id   (str "execution-box" "-" (:id from) "-" (:id to))
+       :from from
+       :to   to})))
+
+(defn- consumer-span->execution-box [trace]
+  (fn [consumer-span]
+    (let [from ((span->node trace) consumer-span)
+          to   ((consumer-span->message-handled-node trace) consumer-span)]
+      {:id   (str "consumer-span" "-" (:id from) "-" (:id to))
+       :from from
+       :to   to})))
+
 (s/defn execution-boxes :- [s-sequence-diagram/ExecutionBox]
   [trace :- s-jaeger/Trace]
-  (let [server-spans          (->> trace :spans (filter server-span?))
-        consumer-spans        (->> trace :spans (filter consumer-span?))
-        topic-execution-boxes (->topic-execution-boxes (:spans trace))]
-    (->> consumer-spans
-         (concat server-spans)
-         (map (span->execution-box trace))
-         (concat topic-execution-boxes))))
+  (let [server-spans                (->> trace :spans (filter server-span?))
+        consumer-spans              (->> trace :spans (filter consumer-span?))
+        http-server-execution-boxes (map (server-span->execution-box trace) server-spans)
+        consumer-execution-boxes    (map (consumer-span->execution-box trace) consumer-spans)]
+    (concat http-server-execution-boxes consumer-execution-boxes)))
 
 (s/defn nodes :- [s-sequence-diagram/Node]
   [trace :- s-jaeger/Trace]
-  (let [server-spans       (->> trace :spans (filter server-span?))
-        client-spans       (->> trace :spans (filter client-span?))
-        consumer-spans     (->> trace :spans (filter consumer-span?))
-        producer-spans     (->> trace :spans (filter producer-span?))
-        in-response-nodes  (map (server-span->in-response-node trace) server-spans)
-        out-response-nodes (map (client-span->out-response-node trace) client-spans)
-        topic-nodes        (map (producer-span->topic-node trace) producer-spans)
-        logs-nodes         (reduce (span->log-nodes trace) [] (:spans trace))]
+  (let [server-spans          (->> trace :spans (filter server-span?))
+        client-spans          (->> trace :spans (filter client-span?))
+        consumer-spans        (->> trace :spans (filter consumer-span?))
+        producer-spans        (->> trace :spans (filter producer-span?))
+        in-response-nodes     (map (server-span->in-response-node trace) server-spans)
+        out-response-nodes    (map (client-span->out-response-node trace) client-spans)
+        topic-nodes           (map (producer-span->topic-node trace) producer-spans)
+        logs-nodes            (reduce (span->log-nodes trace) [] (:spans trace))
+        message-handled-nodes (map (consumer-span->message-handled-node trace) consumer-spans)]
     (->> [server-spans client-spans consumer-spans producer-spans]
          (apply concat)
          (map (span->node trace))
-         (concat in-response-nodes out-response-nodes topic-nodes logs-nodes))))
+         (concat in-response-nodes out-response-nodes topic-nodes logs-nodes message-handled-nodes))))
 
 (s/defn arrows :- [s-sequence-diagram/Arrow]
   [trace :- s-jaeger/Trace]
