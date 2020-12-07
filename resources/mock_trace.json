@@ -14,7 +14,80 @@
                                              "value": "GET"},
                                             {"key":   "http.url",
                                              "type":  "string",
-                                             "value": "/api/orders/1"}]},
+                                             "value": "/api/orders/1"}],
+                          "logs": [
+                            {
+                              "timestamp": 1607369984519230,
+                              "fields": [
+                                {
+                                  "key": "event",
+                                  "type": "string",
+                                  "value": "GetConn"
+                                }
+                              ]
+                            },
+                            {
+                              "timestamp": 1607369984519391,
+                              "fields": [
+                                {
+                                  "key": "event",
+                                  "type": "string",
+                                  "value": "GotConn"
+                                }
+                              ]
+                            },
+                            {
+                              "timestamp": 1607369984519501,
+                              "fields": [
+                                {
+                                  "key": "event",
+                                  "type": "string",
+                                  "value": "WroteHeaders"
+                                }
+                              ]
+                            },
+                            {
+                              "timestamp": 1607369984519534,
+                              "fields": [
+                                {
+                                  "key": "event",
+                                  "type": "string",
+                                  "value": "WroteRequest"
+                                }
+                              ]
+                            },
+                            {
+                              "timestamp": 1607369984575879,
+                              "fields": [
+                                {
+                                  "key": "event",
+                                  "type": "string",
+                                  "value": "GotFirstResponseByte"
+                                }
+                              ]
+                            },
+                            {
+                              "timestamp": 1607369984575953,
+                              "fields": [
+                                {
+                                  "key": "event",
+                                  "type": "string",
+                                  "value": "PutIdleConn"
+                                }
+                              ]
+                            },
+                            {
+                              "timestamp": 1607369984575984,
+                              "fields": [
+                                {
+                                  "key": "event",
+                                  "type": "string",
+                                  "value": "ClosedBody"
+                                }
+                              ]
+                            }
+                          ]
+                         },
                          {"traceID":       "1",
                           "spanID":        "2",
                           "processID":     "p1",

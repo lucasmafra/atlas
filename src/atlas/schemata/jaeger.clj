@@ -30,15 +30,25 @@
    :type  s/Str
    :value s/Any})
 
+(def LogField
+  {:key   s/Str
+   :type  s/Str
+   :value s/Str})
+
+(def SpanLog
+  {:timestamp cs/TimestampMicroseconds
+   :fields [LogField]})
+
 (def Span
-  {:trace-id       s/Str
-   :span-id        s/Str
-   :process-id     s/Keyword
-   :operation-name s/Str
-   :start-time     cs/TimestampMicroseconds
-   :duration       s/Int
-   :references     [SpanReference]
-   :tags           [SpanTag]})
+  {:trace-id              s/Str
+   :span-id               s/Str
+   :process-id            s/Keyword
+   :operation-name        s/Str
+   :start-time            cs/TimestampMicroseconds
+   :duration              s/Int
+   :references            [SpanReference]
+   :tags                  [SpanTag]
+   (s/optional-key :logs) [SpanLog]})
 
 (def TraceProcess
   {:service-name s/Str})

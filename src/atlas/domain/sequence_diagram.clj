@@ -15,9 +15,15 @@
   ([k] #(= k (:key %)))
   ([k v] (every-pred #(= k (:key %)) #(= v (:value %)))))
 
+(defn- match-log-field?
+  ([k] #(= k (:key %))))
+
 (defn- find-tag
   ([k tags] (->> tags (filter (match-tag? k)) first))
   ([k v tags] (->> tags (filter (match-tag? k v)) first)))
+
+(defn- find-log-field
+  ([k log] (->> log :fields (filter (match-log-field? k)) first)))
 
 (def has-tag? (comp boolean find-tag))
 
@@ -70,6 +76,22 @@
                 :time      (str (microseconds->epoch start-time))}
      :lifeline (span->service-name span trace)}))
 
+(defn- span->log-node [trace {:keys [span-id] :as span}]
+  (fn [{:keys [timestamp fields]}]
+    {:id       (str "log-" span-id "-" timestamp)
+     :time     (microseconds->epoch timestamp)
+     :meta     (merge
+                {:log-level "INFO"
+                 :time      (str (microseconds->epoch timestamp))}
+                (->> fields
+                     (map (fn [{:keys [key value]}] [(keyword key) value]))
+                     (into {})))
+     :lifeline (span->service-name span trace)}))
+
+(defn- span->log-nodes [trace]
+  (fn [acc {:keys [logs] :as span}]
+    (concat acc (map (span->log-node trace span) logs))))
+
 (defn- server-span->in-response-node [trace]
   (fn [{:keys [span-id start-time duration] :as span}]
     {:id       (str "service-" span-id "-in-response")
@@ -87,10 +109,6 @@
                 :log-level "INFO"
                 :time      (str (span->end-time span))}
      :lifeline (span->service-name span trace)}))
-
-(defn tap [x]
-  (prn x)
-  x)
 
 (defn- span->topic [{:keys [tags]}] (->> tags (find-tag "message_bus.destination") :value))
 
@@ -223,11 +241,12 @@
         producer-spans     (->> trace :spans (filter producer-span?))
         in-response-nodes  (map (server-span->in-response-node trace) server-spans)
         out-response-nodes (map (client-span->out-response-node trace) client-spans)
-        topic-nodes        (map (producer-span->topic-node trace) producer-spans)]
+        topic-nodes        (map (producer-span->topic-node trace) producer-spans)
+        logs-nodes         (reduce (span->log-nodes trace) [] (:spans trace))]
     (->> [server-spans client-spans consumer-spans producer-spans]
          (apply concat)
          (map (span->node trace))
-         (concat in-response-nodes out-response-nodes topic-nodes))))
+         (concat in-response-nodes out-response-nodes topic-nodes logs-nodes))))
 
 (s/defn arrows :- [s-sequence-diagram/Arrow]
   [trace :- s-jaeger/Trace]
