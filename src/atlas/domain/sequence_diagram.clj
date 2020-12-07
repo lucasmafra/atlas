@@ -178,11 +178,11 @@
 
 (defn- consumer-span->arrow [trace]
   (fn [consumer-span]
-    {:id         (:span-id consumer-span)
-     :from       (span->topic consumer-span)
-     :to         (span->service-name consumer-span trace)
-     :start-time (microseconds->epoch (:start-time consumer-span))
-     :label      "consume"}))
+    (when-let [producer-span (find-parent consumer-span trace)]
+      {:id   (:span-id consumer-span)
+       :from ((producer-span->topic-node trace) producer-span)
+       :to   ((span->node trace) consumer-span)
+       :kind "async"})))
 
 (defn- build-arrows [{:keys [spans] :as trace}]
   (fn [[matcher mapper]] (->> spans (filter matcher) (map (mapper trace)) (remove nil?))))
@@ -233,6 +233,7 @@
   [trace :- s-jaeger/Trace]
   (->> [[client-span? client-span->arrow]
         [server-span? server-span->arrow]
-        [producer-span? producer-span->arrow]]
+        [producer-span? producer-span->arrow]
+        [consumer-span? consumer-span->arrow]]
        (map (build-arrows trace))
        (apply concat)))
