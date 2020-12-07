@@ -21,12 +21,10 @@
    :lifeline s/Str})
 
 (def Arrow
-  {:id                      s/Str
-   :from                    s/Str
-   :to                      s/Str
-   :start-time              cs/EpochMillis
-   (s/optional-key :prefix) s/Str
-   :label                   s/Str})
+  {:id   s/Str
+   :from Node
+   :to   Node
+   :kind s/Str})
 
 (def SequenceDiagram
   {:start-time      cs/EpochMillis

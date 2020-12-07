@@ -16,4 +16,4 @@
      :lifelines       (d-sequence-diagram/lifelines trace)
      :execution-boxes (d-sequence-diagram/execution-boxes trace)
      :nodes           (d-sequence-diagram/nodes trace)
-     :arrows          []}))
+     :arrows          (d-sequence-diagram/arrows trace)}))

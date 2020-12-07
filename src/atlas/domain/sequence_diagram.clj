@@ -156,29 +156,25 @@
 (defn- client-span->arrow [trace]
   (fn [client-span]
     (when-let [server-span (find-child client-span trace)]
-      {:id         (:span-id client-span)
-       :from       (span->service-name client-span trace)
-       :to         (span->service-name server-span trace)
-       :start-time (microseconds->epoch (:start-time client-span))
-       :prefix     (span->http-method client-span)
-       :label      (span->http-url client-span)})))
+      {:id   (:span-id client-span)
+       :from ((span->node trace) client-span)
+       :to   ((span->node trace) server-span)
+       :kind "sync"})))
 
 (defn- server-span->arrow [trace]
   (fn [server-span]
     (when-let [client-span (find-parent server-span trace)]
-      {:id         (:span-id server-span)
-       :from       (span->service-name server-span trace)
-       :to         (span->service-name client-span trace)
-       :start-time (span->end-time client-span)
-       :label      "response"})))
+      {:id   (:span-id server-span)
+       :from ((server-span->in-response-node trace) server-span)
+       :to   ((client-span->out-response-node trace) client-span)
+       :kind "sync"})))
 
 (defn- producer-span->arrow [trace]
   (fn [producer-span]
-    {:id         (:span-id producer-span)
-     :from       (span->service-name producer-span trace)
-     :to         (span->topic producer-span)
-     :start-time (microseconds->epoch (:start-time producer-span))
-     :label      "produce"}))
+    {:id   (:span-id producer-span)
+     :from ((span->node trace) producer-span)
+     :to   ((producer-span->topic-node trace) producer-span)
+     :kind "async"}))
 
 (defn- consumer-span->arrow [trace]
   (fn [consumer-span]
@@ -237,7 +233,6 @@
   [trace :- s-jaeger/Trace]
   (->> [[client-span? client-span->arrow]
         [server-span? server-span->arrow]
-        [producer-span? producer-span->arrow]
-        [consumer-span? consumer-span->arrow]]
+        [producer-span? producer-span->arrow]]
        (map (build-arrows trace))
        (apply concat)))
