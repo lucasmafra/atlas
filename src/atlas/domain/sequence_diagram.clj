@@ -94,6 +94,15 @@
 
 (defn- span->topic [{:keys [tags]}] (->> tags (find-tag "message_bus.destination") :value))
 
+(defn- producer-span->topic-node [trace]
+  (fn [{:keys [span-id start-time duration] :as span}]
+    {:id       (str "topic-" span-id)
+     :time     (microseconds->epoch start-time)
+     :meta     {:log       "out-message"
+                :log-level "INFO"
+                :time      (str (microseconds->epoch start-time))}
+     :lifeline (span->topic span)}))
+
 (defn- ->topic-execution-boxes [spans]
   (let [spans-by-topic (->> spans
                             (filter (some-fn consumer-span? producer-span?))
@@ -217,11 +226,12 @@
         consumer-spans     (->> trace :spans (filter consumer-span?))
         producer-spans     (->> trace :spans (filter producer-span?))
         in-response-nodes  (map (server-span->in-response-node trace) server-spans)
-        out-response-nodes (map (client-span->out-response-node trace) client-spans)]
+        out-response-nodes (map (client-span->out-response-node trace) client-spans)
+        topic-nodes        (map (producer-span->topic-node trace) producer-spans)]
     (->> [server-spans client-spans consumer-spans producer-spans]
          (apply concat)
          (map (span->node trace))
-         (concat in-response-nodes out-response-nodes))))
+         (concat in-response-nodes out-response-nodes topic-nodes))))
 
 (s/defn arrows :- [s-sequence-diagram/Arrow]
   [trace :- s-jaeger/Trace]
