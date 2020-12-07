@@ -3,14 +3,22 @@
             [schema.core :as s]))
 
 (def Lifeline
-  {:name s/Str
-   :kind (s/enum :service :topic)})
+  {:id    s/Str
+   :label s/Str
+   :kind  (s/enum :service :topic)
+   :time  cs/EpochMillis})
 
 (def ExecutionBox
   {:id          s/Str
    :start-time  cs/EpochMillis
    :duration-ms s/Num
    :lifeline    s/Str})
+
+(def Node
+  {:id       s/Str
+   :time     cs/EpochMillis
+   :meta     {s/Keyword s/Str}
+   :lifeline s/Str})
 
 (def Arrow
   {:id                      s/Str
@@ -25,6 +33,7 @@
    :duration-ms     cs/PosInt
    :lifelines       [Lifeline]
    :execution-boxes [ExecutionBox]
+   :nodes           [Node]
    :arrows          [Arrow]})
 
 (def SequenceDiagramResponse

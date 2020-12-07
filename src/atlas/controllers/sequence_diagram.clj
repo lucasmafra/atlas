@@ -15,4 +15,5 @@
      :duration-ms     (d-sequence-diagram/duration-ms trace)
      :lifelines       (d-sequence-diagram/lifelines trace)
      :execution-boxes (d-sequence-diagram/execution-boxes trace)
-     :arrows          (d-sequence-diagram/arrows trace)}))
+     :nodes           (d-sequence-diagram/nodes trace)
+     :arrows          []}))

@@ -47,6 +47,47 @@
      :duration-ms (/ duration 1000)
      :lifeline    (span->service-name span trace)}))
 
+(defn span->log-type [span]
+  (cond
+    (server-span? span)
+    :in-request
+
+    (consumer-span? span)
+    :in-message
+
+    (client-span? span)
+    :out-request
+
+    (producer-span? span)
+    :out-message))
+
+(defn- span->node [trace]
+  (fn [{:keys [span-id start-time duration] :as span}]
+    {:id       (str "service-" span-id)
+     :time     (microseconds->epoch start-time)
+     :meta     {:log       (name (span->log-type span))
+                :log-level "INFO"
+                :time      (str (microseconds->epoch start-time))}
+     :lifeline (span->service-name span trace)}))
+
+(defn- server-span->in-response-node [trace]
+  (fn [{:keys [span-id start-time duration] :as span}]
+    {:id       (str "service-" span-id "-in-response")
+     :time     (span->end-time span)
+     :meta     {:log       "in-response"
+                :log-level "INFO"
+                :time      (str (span->end-time span))}
+     :lifeline (span->service-name span trace)}))
+
+(defn- client-span->out-response-node [trace]
+  (fn [{:keys [span-id start-time duration] :as span}]
+    {:id       (str "service-" span-id "-out-response")
+     :time     (span->end-time span)
+     :meta     {:log       "out-response"
+                :log-level "INFO"
+                :time      (str (span->end-time span))}
+     :lifeline (span->service-name span trace)}))
+
 (defn tap [x]
   (prn x)
   x)
@@ -76,16 +117,32 @@
 
 (defn- span->http-url [{:keys [tags]}] (->> tags (find-tag "http.url") :value))
 
+(defn- map-vals [f m]
+  (->> m
+       (map (fn [[k v]] [k (f v)]))
+       (into {})))
+
 (defn- ->service-lifelines [spans trace]
-  (map (fn [span] {:name (span->service-name span trace) :start-time (:start-time span) :kind :service}) spans))
+  (->> spans
+       (map (fn [span] {:id    (span->service-name span trace)
+                        :label (span->service-name span trace)
+                        :time  (-> span :start-time microseconds->epoch)
+                        :kind  :service}))
+       (group-by :id)
+       (map-vals (comp first #(sort-by :time %)))
+       vals))
 
 (defn- ->topic-lifelines [spans]
   (->> spans
        (filter producer-span?)
        (map (fn [span]
-              {:name       (span->topic span)
-               :kind       :topic
-               :start-time (:start-time span)}))))
+              {:id    (span->topic span)
+               :label (span->topic span)
+               :kind  :topic
+               :time  (-> span :start-time microseconds->epoch)}))
+       (group-by :id)
+       (map-vals (comp first #(sort-by :time %)))
+       vals))
 
 (defn- client-span->arrow [trace]
   (fn [client-span]
@@ -140,8 +197,7 @@
   (let [services (->service-lifelines spans trace)
         topics   (->topic-lifelines spans)]
     (->> services (concat topics)
-         (sort-by :start-time)
-         (map #(select-keys % [:name :kind]))
+         (sort-by :time)
          distinct)))
 
 (s/defn execution-boxes :- [s-sequence-diagram/ExecutionBox]
@@ -153,6 +209,19 @@
          (concat server-spans)
          (map (span->execution-box trace))
          (concat topic-execution-boxes))))
+
+(s/defn nodes :- [s-sequence-diagram/Node]
+  [trace :- s-jaeger/Trace]
+  (let [server-spans       (->> trace :spans (filter server-span?))
+        client-spans       (->> trace :spans (filter client-span?))
+        consumer-spans     (->> trace :spans (filter consumer-span?))
+        producer-spans     (->> trace :spans (filter producer-span?))
+        in-response-nodes  (map (server-span->in-response-node trace) server-spans)
+        out-response-nodes (map (client-span->out-response-node trace) client-spans)]
+    (->> [server-spans client-spans consumer-spans producer-spans]
+         (apply concat)
+         (map (span->node trace))
+         (concat in-response-nodes out-response-nodes))))
 
 (s/defn arrows :- [s-sequence-diagram/Arrow]
   [trace :- s-jaeger/Trace]

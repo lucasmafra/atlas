@@ -69,14 +69,14 @@
     :method          :post
     :request-schema  s/Any
     :response-schema {}
-    :handler         (fn [{trace :body}]
+    :handler         (fn [{trace :body} _]
                        (c-mock-trace/mock-trace
                         (-> trace
                             generate-string
                             (deserializer/default-deserialize-fn
-                              {"traceID"   :trace-id
-                               "spanID"    :span-id
-                               "processID" :process-id})))
+                             {"traceID"   :trace-id
+                              "spanID"    :span-id
+                              "processID" :process-id})))
                        (ok {}))}})
 
 ;; --- SERVER OVERRIDES ---
