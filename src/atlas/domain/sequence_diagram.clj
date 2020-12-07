@@ -77,8 +77,8 @@
      :lifeline (span->service-name span trace)}))
 
 (defn- span->log-node [trace {:keys [span-id] :as span}]
-  (fn [{:keys [timestamp fields]}]
-    {:id       (str "log-" span-id "-" timestamp)
+  (fn [{:keys [timestamp fields] :as log}]
+    {:id       (str "log-" span-id "-" timestamp "-" (.indexOf (:logs span) log))
      :time     (microseconds->epoch timestamp)
      :meta     (merge
                 {:log-level "INFO"

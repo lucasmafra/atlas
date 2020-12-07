@@ -14,79 +14,7 @@
                                              "value": "mutation"},
                                             {"key":   "http.url",
                                              "type":  "string",
-                                             "value": "requestTransferOut"}],
-                                                    "logs": [
-                            {
-                              "timestamp": 1607369984519230,
-                              "fields": [
-                                {
-                                  "key": "event",
-                                  "type": "string",
-                                  "value": "GetConn"
-                                }
-                              ]
-                            },
-                            {
-                              "timestamp": 1607369984519391,
-                              "fields": [
-                                {
-                                  "key": "event",
-                                  "type": "string",
-                                  "value": "GotConn"
-                                }
-                              ]
-                            },
-                            {
-                              "timestamp": 1607369984519501,
-                              "fields": [
-                                {
-                                  "key": "event",
-                                  "type": "string",
-                                  "value": "WroteHeaders"
-                                }
-                              ]
-                            },
-                            {
-                              "timestamp": 1607369984519534,
-                              "fields": [
-                                {
-                                  "key": "event",
-                                  "type": "string",
-                                  "value": "WroteRequest"
-                                }
-                              ]
-                            },
-                            {
-                              "timestamp": 1607369984575879,
-                              "fields": [
-                                {
-                                  "key": "event",
-                                  "type": "string",
-                                  "value": "GotFirstResponseByte"
-                                }
-                              ]
-                            },
-                            {
-                              "timestamp": 1607369984575953,
-                              "fields": [
-                                {
-                                  "key": "event",
-                                  "type": "string",
-                                  "value": "PutIdleConn"
-                                }
-                              ]
-                            },
-                            {
-                              "timestamp": 1607369984575984,
-                              "fields": [
-                                {
-                                  "key": "event",
-                                  "type": "string",
-                                  "value": "ClosedBody"
-                                }
-                              ]
-                            }
-                          ]
+                                             "value": "requestTransferOut"}]
                          },
                          {"traceID":       "1",
                           "spanID":        "2",
@@ -143,8 +71,117 @@
                                              "value": "PUT"},
                                             {"key":   "http.url",
                                              "type":  "string",
-                                             "value": "/api/transfer-out-request"}]},
-
+                                             "value": "/api/transfer-out-request"}],
+                         "logs": [
+                            {
+                              "timestamp": 1500000000200000,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "rollout-check"
+                                }, {
+                                  "key": "result",
+                                  "type": "string",
+                                  "value": "true"
+                                }, {
+                                  "key": "feature",
+                                  "type": "string",
+                                  "value": "transfer-out-v2-enabled"
+                                }
+                              ]
+                            },
+                            {
+                              "timestamp": 1500000000200001,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "slow-database-query"
+                                }, {
+                                  "key": "query",
+                                  "type": "string",
+                                  "value": ":get-transfer-outs"
+                                }, {
+                                  "key": "total-time-ms",
+                                  "type": "string",
+                                  "value": "255"
+                                }
+                              ]
+                            }, {
+                              "timestamp": 1500000000200002,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "slow-database-query"
+                                }, {
+                                  "key": "query",
+                                  "type": "string",
+                                  "value": ":get-transfer-outs"
+                                }, {
+                                  "key": "total-time-ms",
+                                  "type": "string",
+                                  "value": "255"
+                                }
+                              ]
+                            }, {
+                              "timestamp": 1500000000200003,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "slow-database-query"
+                                }, {
+                                  "key": "query",
+                                  "type": "string",
+                                  "value": ":get-transfer-outs"
+                                }, {
+                                  "key": "total-time-ms",
+                                  "type": "string",
+                                  "value": "255"
+                                }
+                              ]
+                            }, {
+                              "timestamp": 1500000000300000,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "slow-database-query"
+                                }, {
+                                  "key": "query",
+                                  "type": "string",
+                                  "value": ":get-transfer-outs"
+                                }, {
+                                  "key": "total-time-ms",
+                                  "type": "string",
+                                  "value": "255"
+                                }
+                              ]
+                            }, {
+                              "timestamp": 1500000002300000,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "database-query-timeout"
+                                }, {
+                                  "key": "query",
+                                  "type": "string",
+                                  "value": ":get-transfer-outs"
+                                }, {
+                                  "key": "total-time-ms",
+                                  "type": "string",
+                                  "value": "5000"
+                                }, {
+                                  "key": "log-level",
+                                  "type": "string",
+                                  "value": "ERROR"
+                                }
+                              ]
+                            }
+                          ]},
                          {"traceID":       "1",
                           "spanID":        "5",
                           "processID":     "p3",
@@ -181,8 +218,114 @@
                                              "value": "PUT"},
                                             {"key":   "http.url",
                                              "type":  "string",
-                                             "value": "/api/authorize/transfer-out-request"}]},
-
+                                             "value": "/api/authorize/transfer-out-request"}],
+                         "logs": [
+                            {
+                              "timestamp": 1500000000300000,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "rollout-check"
+                                }, {
+                                  "key": "result",
+                                  "type": "string",
+                                  "value": "true"
+                                }, {
+                                  "key": "feature",
+                                  "type": "string",
+                                  "value": "transfer-out-v2-enabled"
+                                }
+                              ]
+                            },
+                            {
+                              "timestamp": 1500000000300001,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "slow-database-query"
+                                }, {
+                                  "key": "query",
+                                  "type": "string",
+                                  "value": ":get-transfer-outs"
+                                }, {
+                                  "key": "total-time-ms",
+                                  "type": "string",
+                                  "value": "255"
+                                }
+                              ]
+                            }, {
+                              "timestamp": 1500000000300002,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "slow-database-query"
+                                }, {
+                                  "key": "query",
+                                  "type": "string",
+                                  "value": ":get-transfer-outs"
+                                }, {
+                                  "key": "total-time-ms",
+                                  "type": "string",
+                                  "value": "255"
+                                }
+                              ]
+                            }, {
+                              "timestamp": 1500000000300003,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "slow-database-query"
+                                }, {
+                                  "key": "query",
+                                  "type": "string",
+                                  "value": ":get-transfer-outs"
+                                }, {
+                                  "key": "total-time-ms",
+                                  "type": "string",
+                                  "value": "255"
+                                }
+                              ]
+                            },{
+                              "timestamp": 1500000000300004,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "slow-database-query"
+                                }, {
+                                  "key": "query",
+                                  "type": "string",
+                                  "value": ":get-transfer-outs"
+                                }, {
+                                  "key": "total-time-ms",
+                                  "type": "string",
+                                  "value": "255"
+                                }
+                              ]
+                            }, {
+                              "timestamp": 1500000000300005,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "slow-database-query"
+                                }, {
+                                  "key": "query",
+                                  "type": "string",
+                                  "value": ":get-transfer-outs"
+                                }, {
+                                  "key": "total-time-ms",
+                                  "type": "string",
+                                  "value": "255"
+                                }
+                              ]
+                            }
+                         ]
+                         },
                          {"traceID":       "1",
                           "spanID":        "15",
                           "processID":     "p4",
@@ -219,8 +362,131 @@
                                              "value": "PUT"},
                                             {"key":   "http.url",
                                              "type":  "string",
-                                             "value": "/api/pin/verify"}]},
-
+                                             "value": "/api/pin/verify"}],
+                          "logs": [
+                            {
+                              "timestamp": 1500000000500000,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "rollout-check"
+                                }, {
+                                  "key": "result",
+                                  "type": "string",
+                                  "value": "true"
+                                }, {
+                                  "key": "feature",
+                                  "type": "string",
+                                  "value": "transfer-out-v2-enabled"
+                                }
+                              ]
+                            },
+                            {
+                              "timestamp": 1500000000500001,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "slow-database-query"
+                                }, {
+                                  "key": "query",
+                                  "type": "string",
+                                  "value": ":get-transfer-outs"
+                                }, {
+                                  "key": "total-time-ms",
+                                  "type": "string",
+                                  "value": "255"
+                                }
+                              ]
+                            }, {
+                              "timestamp": 1500000000500002,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "slow-database-query"
+                                }, {
+                                  "key": "query",
+                                  "type": "string",
+                                  "value": ":get-transfer-outs"
+                                }, {
+                                  "key": "total-time-ms",
+                                  "type": "string",
+                                  "value": "255"
+                                }
+                              ]
+                            }, {
+                              "timestamp": 1500000000500003,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "slow-database-query"
+                                }, {
+                                  "key": "query",
+                                  "type": "string",
+                                  "value": ":get-transfer-outs"
+                                }, {
+                                  "key": "total-time-ms",
+                                  "type": "string",
+                                  "value": "255"
+                                }
+                              ]
+                            },{
+                              "timestamp": 1500000000500004,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "slow-database-query"
+                                }, {
+                                  "key": "query",
+                                  "type": "string",
+                                  "value": ":get-transfer-outs"
+                                }, {
+                                  "key": "total-time-ms",
+                                  "type": "string",
+                                  "value": "255"
+                                }
+                              ]
+                            }, {
+                              "timestamp": 1500000000500005,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "slow-database-query"
+                                }, {
+                                  "key": "query",
+                                  "type": "string",
+                                  "value": ":get-transfer-outs"
+                                }, {
+                                  "key": "total-time-ms",
+                                  "type": "string",
+                                  "value": "255"
+                                }
+                              ]
+                            }, {
+                              "timestamp": 1500000000500006,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "slow-database-query"
+                                }, {
+                                  "key": "query",
+                                  "type": "string",
+                                  "value": ":get-transfer-outs"
+                                }, {
+                                  "key": "total-time-ms",
+                                  "type": "string",
+                                  "value": "255"
+                                }
+                              ]
+                            }
+                         ]
+                         },
                          {"traceID":       "1",
                           "spanID":        "17",
                           "processID":     "p4",
@@ -333,8 +599,131 @@
                                              "value": "GET"},
                                             {"key":   "http.url",
                                              "type":  "string",
-                                             "value": "/api/customers/:id"}]},
-
+                                             "value": "/api/customers/:id"}],
+                          "logs": [
+                            {
+                              "timestamp": 1500000001800010,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "rollout-check"
+                                }, {
+                                  "key": "result",
+                                  "type": "string",
+                                  "value": "true"
+                                }, {
+                                  "key": "feature",
+                                  "type": "string",
+                                  "value": "transfer-out-v2-enabled"
+                                }
+                              ]
+                            },
+                            {
+                              "timestamp": 1500000001800011,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "slow-database-query"
+                                }, {
+                                  "key": "query",
+                                  "type": "string",
+                                  "value": ":get-transfer-outs"
+                                }, {
+                                  "key": "total-time-ms",
+                                  "type": "string",
+                                  "value": "255"
+                                }
+                              ]
+                            }, {
+                              "timestamp": 1500000001800012,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "slow-database-query"
+                                }, {
+                                  "key": "query",
+                                  "type": "string",
+                                  "value": ":get-transfer-outs"
+                                }, {
+                                  "key": "total-time-ms",
+                                  "type": "string",
+                                  "value": "255"
+                                }
+                              ]
+                            }, {
+                              "timestamp": 1500000002000003,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "slow-database-query"
+                                }, {
+                                  "key": "query",
+                                  "type": "string",
+                                  "value": ":get-transfer-outs"
+                                }, {
+                                  "key": "total-time-ms",
+                                  "type": "string",
+                                  "value": "255"
+                                }
+                              ]
+                            },{
+                              "timestamp": 1500000002000004,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "slow-database-query"
+                                }, {
+                                  "key": "query",
+                                  "type": "string",
+                                  "value": ":get-transfer-outs"
+                                }, {
+                                  "key": "total-time-ms",
+                                  "type": "string",
+                                  "value": "255"
+                                }
+                              ]
+                            }, {
+                              "timestamp": 1500000002000005,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "slow-database-query"
+                                }, {
+                                  "key": "query",
+                                  "type": "string",
+                                  "value": ":get-transfer-outs"
+                                }, {
+                                  "key": "total-time-ms",
+                                  "type": "string",
+                                  "value": "255"
+                                }
+                              ]
+                            }, {
+                              "timestamp": 1500000002000006,
+                              "fields": [
+                                {
+                                  "key": "log",
+                                  "type": "string",
+                                  "value": "slow-database-query"
+                                }, {
+                                  "key": "query",
+                                  "type": "string",
+                                  "value": ":get-transfer-outs"
+                                }, {
+                                  "key": "total-time-ms",
+                                  "type": "string",
+                                  "value": "255"
+                                }
+                              ]
+                            }
+                         ]
+                         },
                          {"traceID":       "1",
                           "spanID":        "23",
                           "processID":     "p3",
